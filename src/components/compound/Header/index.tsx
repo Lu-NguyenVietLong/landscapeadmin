@@ -13,8 +13,8 @@ const Header = () => {
         </Link>
         <ul className='mt-50px pl-4'>
           {map(MENU, (item, index) => (
-          <li>
-          <Link className='px-2 py-3 block font-semibold' href={item.route}>
+          <li key={item.route}>
+          <Link className='px-2 py-3 block font-semibold hover:text-primary' href={item.route}>
             {item.title}
           </Link>
         </li>
