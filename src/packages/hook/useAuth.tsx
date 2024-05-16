@@ -41,6 +41,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
       setLoading(true);
       console.log(email, password);
       const data = await loginApi({ email, password });
+      console.log(data);
       setUser(data.user);
       console.log("user", user);
       console.log("data", data);

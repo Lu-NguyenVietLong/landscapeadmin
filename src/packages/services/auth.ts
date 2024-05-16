@@ -1,4 +1,4 @@
-import { AxiosRequestConfig } from "axios";
+import { AxiosRequestConfig, AxiosResponse } from "axios";
 import { IUser } from "../interfaces/user";
 import axios from "./service";
 
@@ -16,11 +16,11 @@ interface LoginResponse {
 
 export const loginApi = async ({ email, password }: LoginRequest): Promise<LoginResponse> => {
     try {
-        const res = await axios.post<LoginResponse>(`/auth/login`, { email, password },
+        const res = await axios.post<AxiosResponse<LoginResponse, any>>(`/auth/login`, { email, password },
         {
             headers: { "Content-Type": "application/json" },
         });
-        return res.data; // Return the data property directly
+        return res;
     } catch (error) {
         console.error('Error logging in:', error);
         throw error;
