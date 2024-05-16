@@ -1,7 +1,6 @@
 "use client";
 import useAuth from "@/packages/context/useAuth";
-import { login } from "@/packages/services/auth";
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 
 const Login = () => {
   const [email, setEmail] = useState("");
