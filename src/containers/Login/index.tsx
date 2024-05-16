@@ -1,5 +1,5 @@
 "use client";
-import useAuth from "@/packages/context/useAuth";
+import useAuth from "@/packages/hook/useAuth";
 import { useState } from "react";
 
 const Login = () => {
@@ -9,7 +9,6 @@ const Login = () => {
 
   const HandleLogin = async () => {
     await login(email, password);
-    console.log("dagoi");
   };
 
   return (

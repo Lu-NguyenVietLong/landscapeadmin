@@ -12,10 +12,8 @@ import { loginApi } from "@/packages/services/auth";
 
 interface AuthContextType {
   user?: any;
-  loading: boolean;
   error?: any;
   login: (email: string, password: string) => void;
-  logout: () => void;
 }
 
 export const AuthContext = createContext<AuthContextType>(
@@ -26,7 +24,6 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<IUser>();
   const [error, setError] = useState<any>();
   const [loading, setLoading] = useState<boolean>(false);
-  const [loadingInitial, setLoadingInitial] = useState<boolean>(true);
 
   // useEffect(() => {
   //   if (error) setError(undefined);
