@@ -2,6 +2,7 @@ import axios from "axios";
 
 const instance = axios.create({
     baseURL: 'https://zenplant-backend.onrender.com/api/v1/',
+    // baseURL: process.env.BASE_URL,
 });
 
   // Add a response interceptor
@@ -30,7 +31,7 @@ instance.interceptors.response.use(function (response) {
     console.log('Error', error.message);
   }
   // return Promise.reject(error);
-  return res
+  return res && res.data ? res.data : res
 });
 
   export default instance

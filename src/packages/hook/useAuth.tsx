@@ -9,11 +9,13 @@ import {
 } from "react";
 import { IUser } from "../interfaces/user";
 import { loginApi } from "@/packages/services/auth";
+import Cookies from "js-cookie";
 
 interface AuthContextType {
   user?: any;
   error?: any;
   login: (email: string, password: string) => void;
+  logout: () => void;
 }
 
 export const AuthContext = createContext<AuthContextType>(
@@ -22,9 +24,19 @@ export const AuthContext = createContext<AuthContextType>(
 
 const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<IUser>();
+  const [token, setToken] = useState("");
   const [error, setError] = useState<any>();
   const [loading, setLoading] = useState<boolean>(false);
 
+  const storeData = Cookies.get("Info");
+
+  useEffect(() => {
+    if (storeData) {
+      const { token, user } = JSON.parse(storeData);
+      setToken(token);
+      setUser(user);
+    }
+  }, []);
   // useEffect(() => {
   //   if (error) setError(undefined);
   // }, [location.pathname, error]);
@@ -39,12 +51,14 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
   const login = async (email: string, password: string) => {
     try {
       setLoading(true);
-      console.log(email, password);
       const data = await loginApi({ email, password });
-      console.log(data);
       setUser(data.user);
-      console.log("user", user);
-      console.log("data", data);
+      if (data && data.token) {
+        Cookies.set(
+          "Info",
+          JSON.stringify({ token: data.token, user: data.user })
+        );
+      }
     } catch (error) {
       setError(error);
     } finally {
@@ -52,10 +66,16 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  const logout = () => {
+    Cookies.remove("Info");
+    setUser(undefined);
+  };
+
   const memoedValue = useMemo(
     () => ({
       user,
       login,
+      logout,
       error,
     }),
     [user, error]
