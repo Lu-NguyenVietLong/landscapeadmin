@@ -7,13 +7,13 @@ interface LoginRequest {
 }
 
 interface LoginResponse {
-    message: string,
-    success: boolean,
-    token: string,
-    user: IUser
+    message?: string,
+    success?: boolean,
+    token?: string,
+    user?: IUser
 }
 
-export const loginApi = async ({email, password}: LoginRequest) => {
+export const loginApi = async ({email, password}: LoginRequest): Promise<LoginResponse> => {
     try {
         const res = await axios.post(`/auth/login`, { email, password },
         {
