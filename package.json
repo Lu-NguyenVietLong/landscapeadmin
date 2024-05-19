@@ -9,7 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@types/draft-js": "^0.11.18",
     "@types/lodash": "^4.17.0",
+    "@types/react-draft-wysiwyg": "^1.13.8",
     "axios": "^1.6.8",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
