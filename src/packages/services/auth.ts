@@ -1,5 +1,5 @@
 import { AxiosRequestConfig, AxiosResponse } from "axios";
-import { IUser } from "../interfaces/user";
+import { IUser } from "../interfaces/user.interface";
 import axios from "./service";
 
 interface LoginRequest {

@@ -7,7 +7,7 @@ import {
   useMemo,
   useState,
 } from "react";
-import { IUser } from "../interfaces/user";
+import { IUser } from "../interfaces/user.interface";
 import { loginApi } from "@/packages/services/auth";
 import Cookies from "js-cookie";
 
@@ -28,13 +28,12 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [error, setError] = useState<any>();
   const [loading, setLoading] = useState<boolean>(false);
 
-  const storeData = Cookies.get("Info");
-
   useEffect(() => {
+    const storeData = Cookies.get("Info");
     if (storeData) {
-      const { token, user } = JSON.parse(storeData);
-      setToken(token);
-      setUser(user);
+      const { StoredToken, StoredUser } = JSON.parse(storeData);
+      setToken(StoredToken);
+      setUser(StoredUser);
     }
   }, []);
   // useEffect(() => {
@@ -56,7 +55,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
       if (data && data.token) {
         Cookies.set(
           "Info",
-          JSON.stringify({ token: data.token, user: data.user })
+          JSON.stringify({ StoredToken: data.token, StoredUser: data.user })
         );
       }
     } catch (error) {

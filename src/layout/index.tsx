@@ -1,5 +1,6 @@
 "use client";
 import Header from "@/components/compound/Header";
+import SideBar from "@/components/compound/SideBar";
 import Container from "@/components/primitive/Container";
 import Login from "@/containers/Login";
 import useAuth from "@/packages/hook/useAuth";
@@ -12,21 +13,23 @@ interface ILayoutProps {
 const Layout = ({ children }: ILayoutProps) => {
   const { user } = useAuth();
 
-  if (!user) {
-    return <Login />;
-    // return <pre>{JSON.stringify(user, null, 4)}</pre>;
-  }
-  return (
-    <Container className="grid grid-cols-12">
-      <header className="col-span-3">
+  if (user) {
+    return (
+      <>
         <Header />
-      </header>
-      <main className="mt-[76px] overflow-x-hidden col-span-9 h-screen">
-        {children}
-      </main>
-      {/* <Footer /> */}
-    </Container>
-  );
+        <Container className="grid grid-cols-12">
+          <div className="col-span-2">
+            <SideBar />
+          </div>
+          <main className="bg-slate-50 p-3 border-slate-200 border rounded-t-2xl col-span-10 overflow-x-hidden h-screen">
+            {children}
+          </main>
+        </Container>
+        {/* <Footer /> */}
+      </>
+    );
+  }
+  return <Login />;
 };
 
 export default Layout;
