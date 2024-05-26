@@ -38,9 +38,9 @@ const Services = () => {
       try {
         setloading(true);
         const res = await getAllServices();
-        if (res && res.services && res.success) {
-          console.log("res->", res.services);
-          setServices(res.services);
+        if (res && res.data.success) {
+          console.log("res->", res.data);
+          setServices(res.data.services);
         }
         setloading(false);
       } catch (error) {

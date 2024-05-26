@@ -9,7 +9,7 @@ interface IServiceResponse{
     service?: IService
 }
 
-export const getAllServices = (): Promise<IServiceResponse> => {
+export const getAllServices = () => {
     const storeData: any = Cookies.get("Info");
     const { StoredToken } = JSON.parse(storeData);
     return axios.get('services', {
@@ -25,7 +25,7 @@ export const getAllServices = (): Promise<IServiceResponse> => {
 //     })
 // }
 
-export const createService = async (formData: FormData) => {
+export const createService = async (formData: FormData): Promise<IServiceResponse> => {
     const storeData: any = Cookies.get("Info");
     const { StoredToken } = JSON.parse(storeData);
     try {
@@ -36,7 +36,7 @@ export const createService = async (formData: FormData) => {
                 // Do not set Content-Type; it will be set automatically by Axios
             },
         });
-        return response;
+        return response.data;
     } catch (error) {
         console.error("Error creating service:", error);
         throw error;
@@ -59,7 +59,7 @@ export const deleteService = async (id: string): Promise<IServiceResponse> => {
                 'Authorization': "Bearer " + StoredToken,
             },
         });
-        return res;
+        return res.data;
     } catch (error) {
         console.error("Error creating service:", error);
         throw error;
