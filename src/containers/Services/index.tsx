@@ -21,7 +21,7 @@ const Services = () => {
   const handleDeleteBlog = async (id: string) => {
     try {
       const res = await deleteService(id);
-      if (res && res.success && services) {
+      if (services) {
         setServices(services.filter((service: IService) => service._id !== id));
       }
     } catch (error) {
