@@ -10,7 +10,7 @@ import { Space, Table } from "antd";
 import { BadgePlus, SquarePen, Trash2 } from "lucide-react";
 
 const Services = () => {
-  const [services, setServices] = useState();
+  const [services, setServices] = useState<IService[]>();
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setloading] = useState(false);
 
