@@ -3,9 +3,10 @@ import axios from "./service";
 import Cookies from "js-cookie";
 
 interface IServiceResponse{
-    message?: string,
-    success?: boolean,
-    services: IService[]
+    message: string,
+    success: boolean,
+    services?: IService[]
+    service?: IService
 }
 
 export const getAllServices = (): Promise<IServiceResponse> => {
@@ -42,7 +43,7 @@ export const createService = async (formData: FormData) => {
     }
 };
 
-export const deleteService = async (id: string) => {
+export const deleteService = async (id: string): Promise<IServiceResponse> => {
     const storeData: any = Cookies.get("Info");
     if (!storeData) {
         throw new Error("No store data found in cookies");
@@ -53,12 +54,12 @@ export const deleteService = async (id: string) => {
         throw new Error("No stored token found in cookies");
     }
     try {
-        const response = await axios.delete<AxiosResponse<{ message: string; success: boolean; }>>(`services/${id}`, {
+        const res = await axios.delete(`services/${id}`, {
             headers: {
                 'Authorization': "Bearer " + StoredToken,
             },
         });
-        return response;
+        return res;
     } catch (error) {
         console.error("Error creating service:", error);
         throw error;

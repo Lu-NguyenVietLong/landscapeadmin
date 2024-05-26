@@ -5,7 +5,8 @@ import Container from "@/components/primitive/Container";
 import Login from "@/containers/Login";
 import useAuth from "@/packages/hook/useAuth";
 import { ReactNode } from "react";
-
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 interface ILayoutProps {
   children: ReactNode;
 }
@@ -24,6 +25,7 @@ const Layout = ({ children }: ILayoutProps) => {
             <Header />
             {children}
           </main>
+          <ToastContainer />
         </div>
         {/* <Footer /> */}
       </>

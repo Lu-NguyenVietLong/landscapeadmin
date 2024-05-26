@@ -8,3 +8,4 @@ interface IService {
     policy?: string,
     projects?: {name: string, images: string[]}
 }
+

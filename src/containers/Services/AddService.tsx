@@ -4,11 +4,16 @@ import BundledEditor from "@/components/primitive/BundledEditor";
 import Button from "@/components/primitive/Button";
 import { createService } from "@/packages/services/servicesApi";
 import React, { useRef, useState } from "react";
+import { toast } from "react-toastify";
 // import { useForm } from "react-hook-form";
 // import { zodResolver } from "@hookform/resolvers/zod";
 // import * as z from "zod";
 
-const AddService = () => {
+interface IAddService {
+  onClose: () => void;
+}
+
+const AddService = ({ onClose }: IAddService) => {
   const [title, setTitle] = useState("");
   const [message, setMessage] = useState("");
   const [content, setContent] = useState("");
@@ -37,7 +42,17 @@ const AddService = () => {
     data.set("content", contentValue);
     data.set("policy", policyValue);
     console.log("content", data);
-    const res = await createService(data);
+
+    try {
+      const res = await createService(data);
+      if (res && res.success) {
+        toast.success("New service added successfully");
+        onClose();
+      }
+    } catch (error) {
+      toast.error("Failed to add new service");
+      console.log("Error->", error);
+    }
   };
 
   // const handleSubmit = async () => {

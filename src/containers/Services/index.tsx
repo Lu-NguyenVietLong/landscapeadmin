@@ -8,6 +8,7 @@ import React, { useEffect, useRef, useState } from "react";
 import AddService from "./AddService";
 import { Space, Table } from "antd";
 import { BadgePlus, SquarePen, Trash2 } from "lucide-react";
+import { toast } from "react-toastify";
 
 const Services = () => {
   const [services, setServices] = useState<IService[]>();
@@ -21,10 +22,13 @@ const Services = () => {
   const handleDeleteBlog = async (id: string) => {
     try {
       const res = await deleteService(id);
-      if (services) {
+      console.log("ressss", res);
+      if (services && services?.length > 0 && res.success) {
         setServices(services.filter((service: IService) => service._id !== id));
+        toast.success("Services deleted");
       }
     } catch (error) {
+      toast.error("Failed to delete service");
       console.log("Error->", error);
     }
   };
@@ -34,7 +38,7 @@ const Services = () => {
       try {
         setloading(true);
         const res = await getAllServices();
-        if (res && res.services && res.services.length > 0) {
+        if (res && res.services && res.success) {
           console.log("res->", res.services);
           setServices(res.services);
         }
@@ -85,7 +89,7 @@ const Services = () => {
       </div>
       <Modal isOpen={isOpen} onClose={HandleClose}>
         <h1 className="text-xl font-semibold">Add service</h1>
-        <AddService />
+        <AddService onClose={HandleClose} />
       </Modal>
     </section>
   );
