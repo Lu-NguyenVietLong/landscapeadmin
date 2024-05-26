@@ -12,7 +12,7 @@ import { loginApi } from "@/packages/services/auth";
 import Cookies from "js-cookie";
 
 interface AuthContextType {
-  user?: any;
+  user?: IUser;
   error?: any;
   login: (email: string, password: string) => void;
   logout: () => void;

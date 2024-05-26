@@ -8,15 +8,18 @@ import { cn } from "@/utils/helpers";
 const SideBar = () => {
   const pathname = usePathname();
   return (
-    <div className="">
+    <aside className="shadow-default px-3">
+      <Link href="/" className="block mt-4 py-4">
+        <div className="text-black font-bold text-xl">Sắc Xanh Garden</div>
+      </Link>
       <ul className="mt-5">
         {map(MENU, (item, index) => (
           <li key={item.route}>
             <Link
               className={cn(
-                "pr-2 py-3 block font-semibold hover:text-primary",
+                "py-3 block font-semibold text-primary-second px-2 rounded-lg",
                 {
-                  "text-primary": pathname === item.route,
+                  "text-primary bg-primary/20": pathname === item.route,
                 }
               )}
               href={item.route}
@@ -26,7 +29,7 @@ const SideBar = () => {
           </li>
         ))}
       </ul>
-    </div>
+    </aside>
   );
 };
 

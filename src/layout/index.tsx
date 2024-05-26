@@ -16,15 +16,15 @@ const Layout = ({ children }: ILayoutProps) => {
   if (user) {
     return (
       <>
-        <Header />
-        <Container className="grid grid-cols-12">
+        <div className="grid grid-cols-12">
           <div className="col-span-2">
             <SideBar />
           </div>
-          <main className="bg-slate-50 p-3 border-slate-200 border rounded-t-2xl col-span-10 overflow-x-hidden h-screen">
+          <main className="bg-background px-6 col-span-10 overflow-x-hidden h-screen">
+            <Header />
             {children}
           </main>
-        </Container>
+        </div>
         {/* <Footer /> */}
       </>
     );

@@ -16,6 +16,51 @@ export const getAllServices = (): Promise<IServiceResponse> => {
     });
 }
 
-export const createService = ({ title, slug, images, message, content, policy, projects}: IService) => {
-    return axios.post<IService>(`services`, { title, slug, images, message, content, policy, projects})
+// export const createService = ({ title, slug, images, message, content, policy, projects}: IService) => {
+//     const storeData: any = Cookies.get("Info");
+//     const { StoredToken } = JSON.parse(storeData);
+//     return axios.post<IService>(`services`, { title, slug, images, message, content, policy, projects}, {
+//         headers: { 'Authorization': "Bearer " + StoredToken },
+//     })
+// }
+
+export const createService = async (formData: FormData) => {
+    const storeData: any = Cookies.get("Info");
+    const { StoredToken } = JSON.parse(storeData);
+    try {
+        const response = await axios.post(`services`, formData, {
+            headers: {
+                'Authorization': "Bearer " + StoredToken,
+                'content-type': 'multipart/form-data'
+                // Do not set Content-Type; it will be set automatically by Axios
+            },
+        });
+        return response;
+    } catch (error) {
+        console.error("Error creating service:", error);
+        throw error;
+    }
+};
+
+export const deleteService = async (id: string) => {
+    const storeData: any = Cookies.get("Info");
+    if (!storeData) {
+        throw new Error("No store data found in cookies");
+    }
+
+    const { StoredToken } = JSON.parse(storeData);
+    if (!StoredToken) {
+        throw new Error("No stored token found in cookies");
+    }
+    try {
+        const response = await axios.delete<AxiosResponse<{ message: string; success: boolean; }>>(`services/${id}`, {
+            headers: {
+                'Authorization': "Bearer " + StoredToken,
+            },
+        });
+        return response;
+    } catch (error) {
+        console.error("Error creating service:", error);
+        throw error;
+    }
 }

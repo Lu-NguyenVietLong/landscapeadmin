@@ -20,24 +20,16 @@ const config: Config = {
       },
       colors: {
         primary: {
-          lighter: "#90EE90",
-          light: "#7CFC00",
-          DEFAULT: "#6B8E23",
-          dark: "#228B22",
-          darker: "#006400",
+          DEFAULT: "rgb(105,108,255)",
+          second: "rgb(50,71,92)"
         },
-        foreground: {
-          DEFAULT: "#ADFF2F",
-        },
-        second: {
-          DEFAULT: "#8E8E93",
+        background: {
+          DEFAULT: "rgb(245, 245, 249)",
         },
       },
       boxShadow: {
-        default: "0px 0px 10px rgba(0, 0, 0, 0.1)",
-        second: "0px 4px 18px 0px rgba(0, 0, 0, 0.01)",
-        xs: "0px 1px 2px 0px #1018280d",
-        box: "0px 4px 26px 0px rgba(66, 71, 76, 0.2)",
+        default: "0px 1px 6px -2px rgba(50, 71, 93, 0.1)",
+        box: "0px 1px 7px -2px rgba(50, 71, 92, 0.1)",
       },
       transitionProperty: {
         "max-height": "max-height",

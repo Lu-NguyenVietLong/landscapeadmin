@@ -4,7 +4,7 @@ import React, { ReactNode } from "react";
 import { cn } from "@/utils/helpers";
 
 export const buttonStyles = cva(
-  "flex-center gap-2 rounded-3xl shadow-xs h-max w-max transition-all duration-300 whitespace-nowrap border",
+  "flex-center gap-2 rounded-lg h-max w-max transition-all duration-300 whitespace-nowrap border",
   {
     variants: {
       type: {
