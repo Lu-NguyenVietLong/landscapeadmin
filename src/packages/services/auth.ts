@@ -20,7 +20,7 @@ export const loginApi = async ({ email, password }: LoginRequest): Promise<Login
         {
             headers: { "Content-Type": "application/json" },
         });
-        return res;
+        return res.data;
     } catch (error) {
         console.error('Error logging in:', error);
         throw error;

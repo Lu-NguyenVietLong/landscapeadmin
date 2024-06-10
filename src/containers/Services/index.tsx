@@ -11,12 +11,16 @@ import { BadgePlus, SquarePen, Trash2 } from "lucide-react";
 import { toast } from "react-toastify";
 
 const Services = () => {
-  const [services, setServices] = useState<IService[]>();
+  const [services, setServices] = useState<IService[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setloading] = useState(false);
 
   const HandleClose = () => {
     setIsOpen(false);
+  };
+
+  const handleAddSerive = (props: IService) => {
+    setServices([...services, props]);
   };
 
   const handleDeleteBlog = async (id: string) => {
@@ -89,7 +93,10 @@ const Services = () => {
       </div>
       <Modal isOpen={isOpen} onClose={HandleClose}>
         <h1 className="text-xl font-semibold">Add service</h1>
-        <AddService onClose={HandleClose} />
+        <AddService
+          onClose={HandleClose}
+          addService={(props: IService) => handleAddSerive(props)}
+        />
       </Modal>
     </section>
   );

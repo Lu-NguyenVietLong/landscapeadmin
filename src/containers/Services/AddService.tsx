@@ -3,23 +3,36 @@
 import BundledEditor from "@/components/primitive/BundledEditor";
 import Button from "@/components/primitive/Button";
 import { createService } from "@/packages/services/servicesApi";
+import { uploadImages } from "@/packages/services/uploadImages";
+import { Input } from "antd";
+import { map } from "lodash";
+import { Plus, PlusCircle, Trash, Trash2 } from "lucide-react";
 import React, { useRef, useState } from "react";
 import { toast } from "react-toastify";
-// import { useForm } from "react-hook-form";
-// import { zodResolver } from "@hookform/resolvers/zod";
-// import * as z from "zod";
 
 interface IAddService {
   onClose: () => void;
+  addService: (props: IService) => void;
 }
 
-const AddService = ({ onClose }: IAddService) => {
+interface IProjectField {
+  projectName: string;
+  files: File[];
+}
+
+const AddService = ({ onClose, addService }: IAddService) => {
   const [title, setTitle] = useState("");
   const [message, setMessage] = useState("");
   const [content, setContent] = useState("");
   const [images, setImages] = useState<File[]>([]);
   const [contentValue, setContentValue] = useState("");
   const [policyValue, setPolicyValue] = useState("");
+  const [projectField, setProjectField] = useState<IProjectField[]>([
+    {
+      projectName: "",
+      files: [],
+    },
+  ]);
 
   const editorRef = useRef(null);
 
@@ -31,21 +44,78 @@ const AddService = ({ onClose }: IAddService) => {
     }
   };
 
+  const handleChangeProjectField = (
+    index: number,
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const value = [...projectField];
+    const { name, files, value: inputValue } = e.target;
+
+    if (name === "projectName") {
+      value[index][name] = inputValue;
+    } else if (name === "files" && files) {
+      value[index][name] = Array.from(files);
+    }
+
+    setProjectField(value);
+  };
+
+  const handleAddField = () => {
+    setProjectField([...projectField, { projectName: "", files: [] }]);
+  };
+
+  const handleDelteField = (index: number) => {
+    const value = projectField.filter((_, idx) => idx !== index);
+    setProjectField(value);
+  };
+
   const handleSubmit = async () => {
+    const uploadPromises: any = [];
+
+    const imageData = new FormData();
     const data = new FormData();
-    data.set("title", title);
-    images.forEach((file, index) => {
-      data.append(`images`, file);
+    projectField.forEach(async (project) => {
+      console.log("project.files", project.files);
+      project.files.forEach((file) => {
+        imageData.append("files", file);
+      });
+      const uploadPromise = uploadImages(imageData).then((uploadRes) => {
+        console.log("upload", uploadRes);
+        data.append(
+          "projects",
+          JSON.stringify({
+            name: project.projectName,
+            images: uploadRes.images,
+          })
+        );
+      });
+
+      uploadPromises.push(uploadPromise);
     });
-    data.set("slug", "slg-test");
-    data.set("message", message);
-    data.set("content", contentValue);
-    data.set("policy", policyValue);
-    console.log("content", data);
+
+    // data.set("title", title);
+    // images.forEach((file, index) => {
+    //   data.append(`images`, file);
+    // });
+    // data.set("message", message);
+    // data.set("content", contentValue);
+    // data.set("policy", policyValue);
 
     try {
+      await Promise.all(uploadPromises); // Wait for all uploads to finish
+
+      data.set("title", title);
+      images.forEach((file) => {
+        data.append("images", file);
+      });
+      data.set("message", message);
+      data.set("content", contentValue);
+      data.set("policy", policyValue);
+
+      console.log("data projects", data.getAll("projects"));
       const res = await createService(data);
-      if (res && res.success) {
+      if (res && res.success && res.service) {
+        addService(res.service);
         toast.success("New service added successfully");
         onClose();
       }
@@ -54,47 +124,6 @@ const AddService = ({ onClose }: IAddService) => {
       console.log("Error->", error);
     }
   };
-
-  // const handleSubmit = async () => {
-  //   try {
-  //     const res = await createService({
-  //       title,
-  //       slug: "test-slug",
-  //       images,
-  //       message,
-  //       content: contentValue,
-  //       policy: policyValue,
-  //     }); // Ensure your createService function handles FormData
-  //     console.log("create", res);
-  //   } catch (error) {
-  //     console.error("Error creating service:", error);
-  //   }
-  // };
-
-  //   form
-  // const formSchema = z.object({
-  //   title: z.string(),
-  //   images: z.array(z.string()),
-  //   message: z.string(),
-  //   content: z.string(),
-  //   policy: z.string(),
-  //   projects: z.array(
-  //     z.object({ name: z.string(), images: z.array(z.string()) })
-  //   ),
-  // });
-
-  // const form = useForm<z.infer<typeof formSchema>>({
-  //   resolver: zodResolver(formSchema),
-  //   mode: "onChange",
-  //   defaultValues: {
-  //     title: "",
-  //     images: [],
-  //     message: "",
-  //     content: "",
-  //     policy: "",
-  //     projects: [{ name: "", images: [] }],
-  //   },
-  // });
 
   return (
     <form className="mt-5 w-[70%] mx-auto">
@@ -150,13 +179,33 @@ const AddService = ({ onClose }: IAddService) => {
       </div>
       <div className="mb-3">
         <label className="text-second">Projects:</label>
-        <div className="flex items-center gap-[10%]">
-          <input
-            type="text"
-            placeholder="Project name..."
-            className="bg-slate-200 w-[45%] border-none outline-none py-3 px-4 mt-1"
+        {map(projectField, (project, index) => (
+          <div className="flex gap-2 mb-3" key={`project-${index}`}>
+            <Input
+              name="projectName"
+              value={project.projectName}
+              type="text"
+              onChange={(e) => handleChangeProjectField(index, e)}
+            />
+            <Input
+              onChange={(e) => handleChangeProjectField(index, e)}
+              name="files"
+              type="file"
+            />
+            <div className="text-primary flex items-center gap-2">
+              <Trash2
+                onClick={() => handleDelteField(index)}
+                className="hover:text-black cursor-pointer"
+              />
+            </div>
+          </div>
+        ))}
+        <div className="flex justify-center mt-4">
+          <PlusCircle
+            size={30}
+            onClick={handleAddField}
+            className="hover:text-black text-primary cursor-pointer"
           />
-          <input type="file" className="w-[45%]" />
         </div>
       </div>
       <div className="flex justify-center mt-5">
