@@ -82,7 +82,7 @@ const ServiceForm = ({ service }: IServiceForm) => {
       </div>
       <div className="mb-3">
         <label className="text-second">Projects:</label>
-        {map(service.projects, (project, index) => (
+        {/* {map(service.projects, (project, index) => (
           <div className="flex gap-2 mb-3" key={`project-${index}`}>
             <Input
               name="projectName"
@@ -103,7 +103,7 @@ const ServiceForm = ({ service }: IServiceForm) => {
               />
             </div>
           </div>
-        ))}
+        ))} */}
         <div className="flex justify-center mt-4">
           <PlusCircle
             size={30}
