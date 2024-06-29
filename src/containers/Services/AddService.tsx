@@ -7,8 +7,8 @@ import { uploadImages } from "@/packages/services/uploadImages";
 import { Input } from "antd";
 import { map } from "lodash";
 import { Plus, PlusCircle, Trash, Trash2 } from "lucide-react";
-import React, { useRef, useState } from "react";
 import { toast } from "react-toastify";
+import React, { useRef, useState } from "react";
 
 interface IAddService {
   onClose: () => void;
@@ -40,7 +40,6 @@ const AddService = ({ onClose, addService }: IAddService) => {
     if (e.target.files) {
       const files = Array.from(e.target.files);
       setImages(files);
-      console.log("files: " + files);
     }
   };
 
@@ -75,12 +74,10 @@ const AddService = ({ onClose, addService }: IAddService) => {
     const imageData = new FormData();
     const data = new FormData();
     projectField.forEach(async (project) => {
-      console.log("project.files", project.files);
       project.files.forEach((file) => {
         imageData.append("files", file);
       });
       const uploadPromise = uploadImages(imageData).then((uploadRes) => {
-        console.log("upload", uploadRes);
         data.append(
           "projects",
           JSON.stringify({

@@ -9,14 +9,23 @@ import AddService from "./AddService";
 import { Space, Table } from "antd";
 import { BadgePlus, SquarePen, Trash2 } from "lucide-react";
 import { toast } from "react-toastify";
+import ServiceForm from "./ServiceForm";
 
 const Services = () => {
   const [services, setServices] = useState<IService[]>([]);
-  const [isOpen, setIsOpen] = useState(false);
+  const [service, setService] = useState<IService>({});
+  const [isOpenAdd, setIsOpenAdd] = useState(false);
+  const [isOpenEdit, setIsOpenEdit] = useState(false);
   const [loading, setloading] = useState(false);
 
+  const handleEdit = (service: IService) => {
+    setService(service);
+    console.log("set service", service);
+    setIsOpenEdit(true);
+  };
+
   const HandleClose = () => {
-    setIsOpen(false);
+    setIsOpenAdd(false);
   };
 
   const handleAddSerive = (props: IService) => {
@@ -26,7 +35,6 @@ const Services = () => {
   const handleDeleteBlog = async (id: string) => {
     try {
       const res = await deleteService(id);
-      console.log("ressss", res);
       if (services && services?.length > 0 && res.success) {
         setServices(services.filter((service: IService) => service._id !== id));
         toast.success("Services deleted");
@@ -65,7 +73,7 @@ const Services = () => {
       key: "action",
       render: (service: IService) => (
         <Space size="middle">
-          <Button>
+          <Button onClick={() => handleEdit(service)}>
             <SquarePen strokeWidth={0.75} />
             Edit
           </Button>
@@ -82,7 +90,7 @@ const Services = () => {
       <div className="bg-white size-full shadow-box rounded-lg px-8 py-3">
         <h2 className="text-xl font-medium mt-5">Danh sách các dịch vụ</h2>
         <div className="flex justify-end mt-5 mb-3">
-          <Button onClick={() => setIsOpen(true)}>
+          <Button onClick={() => setIsOpenAdd(true)}>
             {" "}
             <BadgePlus strokeWidth={0.75} /> Add new service
           </Button>
@@ -91,13 +99,17 @@ const Services = () => {
           <Table loading={loading} dataSource={services} columns={columns} />
         </div>
       </div>
-      <Modal isOpen={isOpen} onClose={HandleClose}>
+      <Modal isOpen={isOpenAdd} onClose={HandleClose}>
         <h1 className="text-xl font-semibold">Add service</h1>
         <AddService
           onClose={HandleClose}
           addService={(props: IService) => handleAddSerive(props)}
         />
       </Modal>
+      <Modal isOpen={isOpenEdit} onClose={() => setIsOpenEdit(!isOpenEdit)}>
+        <ServiceForm service={service} />
+      </Modal>
+      <section>{/* <ServiceForm /> */}</section>
     </section>
   );
 };

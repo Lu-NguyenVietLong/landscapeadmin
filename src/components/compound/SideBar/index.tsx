@@ -14,7 +14,7 @@ const SideBar = () => {
       </Link>
       <ul className="mt-5">
         {map(MENU, (item, index) => (
-          <li key={item.route}>
+          <li key={index}>
             <Link
               className={cn(
                 "py-3 block font-semibold text-primary-second px-2 rounded-lg",
