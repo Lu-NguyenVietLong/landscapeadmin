@@ -13,7 +13,7 @@ import ServiceForm from "./ServiceForm";
 
 const Services = () => {
   const [services, setServices] = useState<IService[]>([]);
-  const [service, setService] = useState<IService>({});
+  const [service, setService] = useState<IService>();
   const [isOpenAdd, setIsOpenAdd] = useState(false);
   const [isOpenEdit, setIsOpenEdit] = useState(false);
   const [loading, setloading] = useState(false);

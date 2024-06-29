@@ -11,16 +11,16 @@ interface IProjectField {
 }
 
 interface IServiceForm {
-  service: IService;
+  service: IService | undefined;
 }
 
 const ServiceForm = ({ service }: IServiceForm) => {
-  const [title, setTitle] = useState(service.title);
-  const [message, setMessage] = useState(service.message);
+  const [title, setTitle] = useState(service?.title);
+  const [message, setMessage] = useState(service?.message);
   const [images, setImages] = useState<File[]>([]);
-  const [content, setContent] = useState(service.content);
-  const [policy, setPolicy] = useState(service.policy);
-  const [projectField, setProjectField] = useState(service.projects);
+  const [content, setContent] = useState(service?.content);
+  const [policy, setPolicy] = useState(service?.policy);
+  const [projectField, setProjectField] = useState(service?.projects);
 
   const editorRef = useRef(null);
 
