@@ -1,6 +1,6 @@
 "use client";
 import { Button, Input } from "antd";
-import { map } from "lodash";
+import { isArray, map } from "lodash";
 import { PlusCircle, Trash2 } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
@@ -33,7 +33,9 @@ const ServiceForm = ({ service }: IServiceForm) => {
   const [images, setImages] = useState<File[]>([]);
   const [content, setContent] = useState(service?.content);
   const [policy, setPolicy] = useState(service?.policy);
-  const [projectField, setProjectField] = useState(service?.projects || []);
+  const [projectField, setProjectField] = useState<any>(
+    service?.projects || []
+  );
 
   const [test, setTest] = useState(3);
 
@@ -42,7 +44,7 @@ const ServiceForm = ({ service }: IServiceForm) => {
     setMessage(service?.message);
     setContent(service?.content);
     setPolicy(service?.policy);
-    setProjectField(service?.projects);
+    setProjectField(service?.projects || []);
   }, [service]);
   const editorRef = useRef(null);
 
@@ -57,16 +59,18 @@ const ServiceForm = ({ service }: IServiceForm) => {
     index: number,
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
-    const value = [...projectField];
-    const { name, files, value: inputValue } = e.target;
+    if (isArray(projectField) && projectField.length !== 0) {
+      const updatedProjectField: any = [...projectField];
+      const { name, files, value: inputValue } = e.target;
 
-    if (name === "name") {
-      value[index][name] = inputValue;
-    } else if (name === "images" && files) {
-      value[index][name] = Array.from(files);
+      if (name === "name") {
+        updatedProjectField[index][name] = inputValue;
+      } else if (name === "images" && files) {
+        updatedProjectField[index][name] = Array.from(files);
+      }
+
+      setProjectField(updatedProjectField);
     }
-
-    setProjectField(value);
   };
 
   const handleAddField = () => {
@@ -74,18 +78,18 @@ const ServiceForm = ({ service }: IServiceForm) => {
   };
 
   const handleDelteField = (index: number) => {
-    const value = projectField.filter((_, idx) => idx !== index);
+    const value = projectField.filter((_: any, idx: number) => idx !== index);
     setProjectField(value);
   };
 
   // HANDLE SUBMIT FORM
   const handleSubmit = async () => {
-    const uploadPromises = [];
+    const uploadPromises: any = [];
 
     const data = new FormData();
-    projectField.forEach((project) => {
+    projectField.forEach((project: any) => {
       const imageData = new FormData();
-      project.images.forEach((file) => {
+      project.images.forEach((file: any) => {
         imageData.append("files", file);
       });
       const uploadPromise = uploadImages(imageData).then((uploadRes) => {
@@ -104,18 +108,30 @@ const ServiceForm = ({ service }: IServiceForm) => {
     try {
       await Promise.all(uploadPromises); // Wait for all uploads to finish
 
-      data.set("title", title);
+      if (title) {
+        data.set("title", title);
+      }
       images.forEach((file) => {
         data.append("images", file);
       });
-      data.set("message", message);
-      data.set("content", content);
-      data.set("policy", policy);
 
-      console.log("Form data", { title, message, images, content, policy });
-      console.log("data projects", data.getAll("projects"));
-      const res = await updateService(service?._id, data);
-      console.log("res update", res);
+      if (message) {
+        data.set("message", message);
+      }
+
+      if (content) {
+        data.set("content", content);
+      }
+
+      if (policy) {
+        data.set("policy", policy);
+      }
+      if (service) {
+        const res = await updateService(service?._id, data);
+        if (res && res.success) {
+          toast.success("New service added successfully");
+        }
+      }
     } catch (error) {
       toast.error("Failed to update service");
       console.log("Error->", error);
