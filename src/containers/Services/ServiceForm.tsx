@@ -202,17 +202,17 @@ const ServiceForm = ({ service }: IServiceForm) => {
               name="name"
               value={project.name}
               type="text"
-              onChange={(e) => handleChangeProjectField(index, e)}
+              onChange={(e) => handleChangeProjectField(parseInt(index, 10), e)}
             />
             <Input
-              onChange={(e) => handleChangeProjectField(index, e)}
+              onChange={(e) => handleChangeProjectField(parseInt(index, 10), e)}
               name="images"
               type="file"
               // value={project.images}
             />
             <div className="text-primary flex items-center gap-2">
               <Trash2
-                onClick={() => handleDelteField(index)}
+                onClick={() => handleDelteField(parseInt(index, 10))}
                 className="hover:text-black cursor-pointer"
               />
             </div>
