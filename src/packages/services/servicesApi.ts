@@ -17,13 +17,6 @@ export const getAllServices = () => {
     });
 }
 
-// export const createService = ({ title, slug, images, message, content, policy, projects}: IService) => {
-//     const storeData: any = Cookies.get("Info");
-//     const { StoredToken } = JSON.parse(storeData);
-//     return axios.post<IService>(`services`, { title, slug, images, message, content, policy, projects}, {
-//         headers: { 'Authorization': "Bearer " + StoredToken },
-//     })
-// }
 
 export const createService = async (formData: FormData): Promise<IServiceResponse> => {
     const storeData: any = Cookies.get("Info");
@@ -33,7 +26,6 @@ export const createService = async (formData: FormData): Promise<IServiceRespons
             headers: {
                 'Authorization': "Bearer " + StoredToken,
                 'content-type': 'multipart/form-data'
-                // Do not set Content-Type; it will be set automatically by Axios
             },
         });
         return response.data;
@@ -62,6 +54,23 @@ export const deleteService = async (id: string): Promise<IServiceResponse> => {
         return res.data;
     } catch (error) {
         console.error("Error creating service:", error);
+        throw error;
+    }
+}
+
+export const updateService = async (id: string, formData: FormData): Promise<IServiceResponse> => {
+    const storeData: any = Cookies.get("Info");
+    const { StoredToken } = JSON.parse(storeData);
+    try {
+        const response = await axios.put(`services/${id}`, formData, {
+            headers: {
+                'Authorization': "Bearer " + StoredToken,
+                'Content-Type': 'multipart/form-data'
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Error update service:", error);
         throw error;
     }
 }

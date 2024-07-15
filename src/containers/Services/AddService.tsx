@@ -1,6 +1,6 @@
 "use client";
 
-import BundledEditor from "@/components/primitive/BundledEditor";
+// import BundledEditor from "@/components/primitive/BundledEditor";
 import Button from "@/components/primitive/Button";
 import { createService } from "@/packages/services/servicesApi";
 import { uploadImages } from "@/packages/services/uploadImages";
@@ -9,6 +9,14 @@ import { map } from "lodash";
 import { Plus, PlusCircle, Trash, Trash2 } from "lucide-react";
 import { toast } from "react-toastify";
 import React, { useRef, useState } from "react";
+import dynamic from "next/dynamic";
+
+const BundledEditor = dynamic(
+  () => import("@/components/primitive/BundledEditor"),
+  {
+    ssr: false,
+  }
+);
 
 interface IAddService {
   onClose: () => void;
@@ -90,14 +98,6 @@ const AddService = ({ onClose, addService }: IAddService) => {
       uploadPromises.push(uploadPromise);
     });
 
-    // data.set("title", title);
-    // images.forEach((file, index) => {
-    //   data.append(`images`, file);
-    // });
-    // data.set("message", message);
-    // data.set("content", contentValue);
-    // data.set("policy", policyValue);
-
     try {
       await Promise.all(uploadPromises); // Wait for all uploads to finish
 
@@ -123,7 +123,7 @@ const AddService = ({ onClose, addService }: IAddService) => {
   };
 
   return (
-    <form className="mt-5 w-[70%] mx-auto">
+    <form className="mt-5 mx-auto">
       <div className="mb-3">
         <label className="text-second">Title:</label>
         <input

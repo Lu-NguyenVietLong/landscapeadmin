@@ -7,6 +7,7 @@ import {
   useMemo,
   useState,
 } from "react";
+import { useRouter } from "next/navigation";
 import { IUser } from "../interfaces/user.interface";
 import { loginApi } from "@/packages/services/auth";
 import Cookies from "js-cookie";
@@ -27,6 +28,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [token, setToken] = useState("");
   const [error, setError] = useState<any>();
   const [loading, setLoading] = useState<boolean>(false);
+  const router = useRouter();
 
   useEffect(() => {
     const storeData = Cookies.get("Info");
@@ -57,6 +59,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
           "Info",
           JSON.stringify({ StoredToken: data.token, StoredUser: data.user })
         );
+        router.push("/");
       }
     } catch (error) {
       setError(error);
@@ -67,6 +70,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const logout = () => {
     Cookies.remove("Info");
+    router.push("/login");
     setUser(undefined);
   };
 

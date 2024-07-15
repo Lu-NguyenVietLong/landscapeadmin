@@ -1,7 +1,7 @@
 "use client";
 import BundledEditor from "@/components/primitive/BundledEditor";
 import Button from "@/components/primitive/Button";
-import Modal from "@/components/primitive/Modal";
+// import Modal from "@/components/primitive/Modal";
 import { deleteService, getAllServices } from "@/packages/services/servicesApi";
 import { map } from "lodash";
 import React, { useEffect, useRef, useState } from "react";
@@ -10,6 +10,7 @@ import { Space, Table } from "antd";
 import { BadgePlus, SquarePen, Trash2 } from "lucide-react";
 import { toast } from "react-toastify";
 import ServiceForm from "./ServiceForm";
+import { Modal } from "antd";
 
 const Services = () => {
   const [services, setServices] = useState<IService[]>([]);
@@ -99,14 +100,18 @@ const Services = () => {
           <Table loading={loading} dataSource={services} columns={columns} />
         </div>
       </div>
-      <Modal isOpen={isOpenAdd} onClose={HandleClose}>
+      <Modal width={800} open={isOpenAdd} onCancel={HandleClose}>
         <h1 className="text-xl font-semibold">Add service</h1>
         <AddService
           onClose={HandleClose}
           addService={(props: IService) => handleAddSerive(props)}
         />
       </Modal>
-      <Modal isOpen={isOpenEdit} onClose={() => setIsOpenEdit(!isOpenEdit)}>
+      <Modal
+        width={800}
+        open={isOpenEdit}
+        onCancel={() => setIsOpenEdit(!isOpenEdit)}
+      >
         <ServiceForm service={service} />
       </Modal>
       <section>{/* <ServiceForm /> */}</section>

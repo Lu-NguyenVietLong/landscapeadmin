@@ -1,3 +1,4 @@
+"use client";
 import { MENU } from "@/utils/routes";
 import { map } from "lodash";
 import Link from "next/link";

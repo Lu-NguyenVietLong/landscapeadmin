@@ -1,7 +1,7 @@
+"use client";
 import Button from "@/components/primitive/Button";
-import Container from "@/components/primitive/Container";
 import useAuth from "@/packages/hook/useAuth";
-import { Bell, ChevronDown, LogOut } from "lucide-react";
+import { Bell, LogOut } from "lucide-react";
 
 const Header = () => {
   const { user, logout } = useAuth();
