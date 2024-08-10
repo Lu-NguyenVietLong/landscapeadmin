@@ -77,11 +77,11 @@ const AddService = ({ onClose, addService }: IAddService) => {
   };
 
   const handleSubmit = async () => {
+    const data = new FormData();
     const uploadPromises: any = [];
 
-    const imageData = new FormData();
-    const data = new FormData();
     projectField.forEach(async (project) => {
+      const imageData = new FormData();
       project.files.forEach((file) => {
         imageData.append("files", file);
       });
@@ -94,7 +94,7 @@ const AddService = ({ onClose, addService }: IAddService) => {
           })
         );
       });
-
+      console.log(project.projectName, project.files);
       uploadPromises.push(uploadPromise);
     });
 
