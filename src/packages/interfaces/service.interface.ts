@@ -1,10 +1,10 @@
 interface IService {
     _id: string;
     title: string;
-    images: File[];
+    images: any;
     message: string;
     content: string,
     policy?: string,
-    projects?: {name: string, images: File[]}
+    projects?: {name: string, images: any}[]
 }
 

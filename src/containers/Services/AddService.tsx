@@ -118,7 +118,6 @@ const AddService = ({ onClose, addService }: IAddService) => {
       }
     } catch (error) {
       toast.error("Failed to add new service");
-      console.log("Error->", error);
     }
   };
 
