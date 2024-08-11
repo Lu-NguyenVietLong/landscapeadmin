@@ -40,7 +40,7 @@ const getBase64 = (file: FileType): Promise<string> =>
     reader.onerror = (error) => reject(error);
   });
 
-const ServiceForm = ({ service }: IServiceForm) => {
+const ServiceForm = (service: IServiceForm, onClose: any) => {
   const [title, setTitle] = useState(service?.title);
   const [message, setMessage] = useState(service?.message);
   const [images, setImages] = useState<any>([]);
@@ -217,6 +217,7 @@ const ServiceForm = ({ service }: IServiceForm) => {
         const res = await updateService(service._id, data);
         if (res && res.success) {
           toast.success("Service updated successfully");
+          onClose();
         } else {
           throw new Error("Failed to update service");
         }
