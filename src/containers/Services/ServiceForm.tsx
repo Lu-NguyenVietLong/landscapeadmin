@@ -28,10 +28,6 @@ interface IProjectFieldList {
   images: File[];
 }
 
-interface IServiceForm {
-  service: IService | undefined;
-}
-
 const getBase64 = (file: FileType): Promise<string> =>
   new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -40,13 +36,13 @@ const getBase64 = (file: FileType): Promise<string> =>
     reader.onerror = (error) => reject(error);
   });
 
-const ServiceForm = (service: IServiceForm, onClose: any) => {
-  const [title, setTitle] = useState(service?.title);
-  const [message, setMessage] = useState(service?.message);
+const ServiceForm = (service: IService, onClose: any) => {
+  const [title, setTitle] = useState(service?.title || "");
+  const [message, setMessage] = useState(service?.message || "");
   const [images, setImages] = useState<any>([]);
   const [imagesList, setImagesList] = useState<any>([]);
-  const [content, setContent] = useState(service?.content);
-  const [policy, setPolicy] = useState(service?.policy);
+  const [content, setContent] = useState(service?.content || "");
+  const [policy, setPolicy] = useState(service?.policy || "");
   const [projectField, setProjectField] = useState<any>(
     service?.projects || []
   );
@@ -58,12 +54,12 @@ const ServiceForm = (service: IServiceForm, onClose: any) => {
   const [previewImage, setPreviewImage] = useState("");
 
   useEffect(() => {
-    setTitle(service?.title);
-    setMessage(service?.message);
-    setContent(service?.content);
-    setPolicy(service?.policy);
+    setTitle(service?.title || "");
+    setMessage(service?.message || "");
+    setContent(service?.content || "");
+    setPolicy(service?.policy || "");
     setProjectField(service?.projects || []);
-    setImages(service?.images);
+    setImages(service?.images || []);
   }, [service]);
   useEffect(() => {
     if (service?.projects && service?.projects.length > 0) {
