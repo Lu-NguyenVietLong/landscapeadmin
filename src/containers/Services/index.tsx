@@ -112,7 +112,9 @@ const Services = () => {
         open={isOpenEdit}
         onCancel={() => setIsOpenEdit(!isOpenEdit)}
       >
-        <ServiceForm service={service} />
+        {service && (
+          <ServiceForm service={service} onClose={() => setIsOpenEdit(false)} />
+        )}
       </Modal>
       <section>{/* <ServiceForm /> */}</section>
     </section>

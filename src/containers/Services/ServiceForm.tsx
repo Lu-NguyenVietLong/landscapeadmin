@@ -28,6 +28,11 @@ interface IProjectFieldList {
   images: File[];
 }
 
+interface IServiceProp {
+  service: IService;
+  onClose: () => void;
+}
+
 const getBase64 = (file: FileType): Promise<string> =>
   new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -36,7 +41,7 @@ const getBase64 = (file: FileType): Promise<string> =>
     reader.onerror = (error) => reject(error);
   });
 
-const ServiceForm = (service: IService, onClose: any) => {
+const ServiceForm = ({ service, onClose }: IServiceProp) => {
   const [title, setTitle] = useState(service?.title || "");
   const [message, setMessage] = useState(service?.message || "");
   const [images, setImages] = useState<any>([]);
