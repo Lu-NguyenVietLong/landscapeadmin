@@ -56,6 +56,7 @@ const Categories = () => {
       toast.success("Category created successfully");
       handleCloseCreateModal();
       fetchCategoriesData();
+      methods.reset({ name: "" });
     } else {
       throw new Error("Failed to create category");
     }

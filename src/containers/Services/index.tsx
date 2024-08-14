@@ -111,6 +111,7 @@ const Services = () => {
         width={800}
         open={isOpenEdit}
         onCancel={() => setIsOpenEdit(!isOpenEdit)}
+        footer={null}
       >
         {service && (
           <ServiceForm service={service} onClose={() => setIsOpenEdit(false)} />
