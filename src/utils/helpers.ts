@@ -6,12 +6,12 @@ const cn = (...inputs: ClassValue[]) => {
 };
 
 const getFullImageUrl = (imageUrlFromApi: string) => {
-  const baseUrl = 'https://zenplant-backend.onrender.com'
+  const baseUrl = 'https://res.cloudinary.com'
   return baseUrl + imageUrlFromApi;
 };
 
 const removeBaseUrlImage = (fullImageUrl: string) => {
-  const baseUrl = 'https://zenplant-backend.onrender.com';
+  const baseUrl = 'https://res.cloudinary.com';
   return fullImageUrl.startsWith(baseUrl) ? fullImageUrl.slice(baseUrl.length) : fullImageUrl;
 };
 
