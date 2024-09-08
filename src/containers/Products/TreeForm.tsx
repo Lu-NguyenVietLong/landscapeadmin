@@ -123,6 +123,7 @@ const TreeForm = ({ type, onClose, tree, onSuccess }: ITreeFormProp) => {
 
   const memoizedDefaultValue = useMemo(
     () => ({
+      _id: tree._id,
       name: tree.name,
       scientificName: tree.scientificName,
       imageUrl: tree.imageUrl,
