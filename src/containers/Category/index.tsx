@@ -100,7 +100,7 @@ const Categories = () => {
     try {
       setLoading(true);
       const response = await getCategories();
-      setCategories(response.data.treesCategory);
+      setCategories(response.treesCategory);
       setLoading(false);
     } catch (error) {
       console.error("Error fetching categories:", error);
