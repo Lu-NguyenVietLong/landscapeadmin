@@ -30,7 +30,6 @@ import Textarea from "@/components/primitive/Textarea";
 import { uploadImages } from "@/packages/services/uploadImages";
 import { createTree, updateTree } from "@/packages/services/product";
 import { toast } from "react-toastify";
-import { useRouter } from "next/navigation";
 import { getFullImageUrl, removeBaseUrlImage } from "@/utils/helpers";
 
 interface ITreeFormProp {

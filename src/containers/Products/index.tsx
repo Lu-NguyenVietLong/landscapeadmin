@@ -4,7 +4,6 @@ import Button from "@/components/primitive/Button";
 import { Modal, Space, Table } from "antd";
 import { BadgePlus, SquarePen, Trash2 } from "lucide-react";
 import React, { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import TreeForm from "./TreeForm";
 import { deleteTree, getTrees } from "@/packages/services/product";
 import { toast } from "react-toastify";
