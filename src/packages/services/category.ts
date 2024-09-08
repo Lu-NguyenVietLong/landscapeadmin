@@ -16,8 +16,9 @@ interface ICreateProp {
   name: string;
 }
 
-export const getCategories = () => {
-  return axios.get('tree-categories');
+export const getCategories  = async () : Promise<ICategoryResponse> => {
+  const response = await axios.get('tree-categories')
+  return response.data;
 };
 
 export const createCategory = async (

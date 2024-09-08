@@ -28,6 +28,13 @@ const Input: React.FC<IInputProps> = ({ name, label, ...inputProps }) => {
             id={name}
             {...field}
             {...inputProps}
+            onChange={(e) => {
+              const value =
+                inputProps.type === "number"
+                  ? parseFloat(e.target.value)
+                  : e.target.value;
+              field.onChange(value);
+            }}
             className={`input bg-slate-200 outline-none px-4 rounded-lg py-2 w-full ${
               errors[name] ? "input-error" : ""
             }`}

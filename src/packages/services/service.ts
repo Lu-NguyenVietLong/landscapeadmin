@@ -1,8 +1,11 @@
 import axios from "axios";
 
 const instance = axios.create({
-    baseURL: 'https://zenplant-backend.onrender.com/api/v1/',
-    // baseURL: process.env.BASE_URL,
+  baseURL: 'https://zenplant-backend.onrender.com/api/v1/',
+  timeout: 10000,  // optional timeout
+  headers: {
+    'Content-Type': 'application/json',
+  },
 });
 
   // Add a response interceptor

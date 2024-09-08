@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   useForm,
   FormProvider,
@@ -28,13 +28,28 @@ import BundledEditor from "@/components/primitive/BundledEditor";
 import { getCategories } from "@/packages/services/category";
 import Textarea from "@/components/primitive/Textarea";
 import { uploadImages } from "@/packages/services/uploadImages";
-import { createTree } from "@/packages/services/product";
+import { createTree, updateTree } from "@/packages/services/product";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
+import { getFullImageUrl, removeBaseUrlImage } from "@/utils/helpers";
+
+interface ITreeFormProp {
+  type: "create" | "edit";
+  tree: ITree;
+  onClose: () => void;
+  onSuccess: () => void;
+}
+
+interface ICategoryOption {
+  _id: string;
+  name: string;
+}
 
 const treeSchema = z.object({
+  _id: z.string().optional(),
   name: z.string().min(1, "Tree name is required"),
   scientificName: z.string().optional(),
+  // imageUrl: z.array(z.any()).min(1, "At least one image is required"),
   imageUrl: z.array(z.any()).min(1, "At least one image is required"),
   sizes: z
     .array(
@@ -86,39 +101,75 @@ const formatVND = (value: number) => {
   }).format(value);
 };
 
-const AddNewProduct = () => {
-  const [imageFiles, setImageFiles] = useState<UploadFile[]>([]);
+const TreeForm = ({ type, onClose, tree, onSuccess }: ITreeFormProp) => {
+  const [imageFiles, setImageFiles] = useState<any>(
+    tree.imageUrl
+      ? tree.imageUrl.map((url, index) => {
+          return {
+            uid: index,
+            url: getFullImageUrl(url),
+            name: url.split("/").pop(),
+          };
+        })
+      : []
+  );
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
-  const [editorDescription, setEditorDescription] = useState("");
-  const [editorCareInstructions, setEditorCareInstructions] = useState("");
+  const [editorDescription, setEditorDescription] = useState(tree.description);
+  const [editorCareInstructions, setEditorCareInstructions] = useState(
+    tree.careInstructions
+  );
   const [categoriesId, setCategoriesId] = useState<SelectProps["options"]>([]);
 
-  const router = useRouter();
+  const memoizedDefaultValue = useMemo(
+    () => ({
+      name: tree.name,
+      scientificName: tree.scientificName,
+      imageUrl: tree.imageUrl,
+      sizes: tree.sizes,
+      description: editorDescription,
+      careInstructions: editorCareInstructions,
+      discount: tree.discount,
+      isAvailable: tree.isAvailable,
+      categories: tree.categories
+        ? tree.categories.map((category: any) => category._id)
+        : [],
+      rating: tree.rating,
+      sold: tree.sold,
+      basicInfo: {
+        light: tree.basicInfo?.light,
+        watering: tree.basicInfo?.watering,
+        environment: tree.basicInfo?.environment,
+        tips: tree.basicInfo?.tips,
+      },
+      additionalInfo: {
+        height: tree.additionalInfo?.height,
+        toxicity: tree.additionalInfo?.toxicity,
+        careLevel: tree.additionalInfo?.careLevel,
+        potSize: tree.additionalInfo?.potSize,
+      },
+    }),
+    [tree]
+  );
 
   const methods = useForm({
     resolver: zodResolver(treeSchema),
-    defaultValues: {
-      imageUrl: [],
-      sizes: [{ size: "", price: 0 }],
-      description: editorDescription,
-      careInstructions: editorCareInstructions,
-      isAvailable: true,
-      categories: [],
-      basicInfo: {
-        light: "",
-        watering: "",
-        environment: "",
-        tips: "",
-      },
-      additionalInfo: {
-        height: "",
-        toxicity: "",
-        careLevel: "",
-        potSize: "",
-      },
-    },
+    defaultValues: memoizedDefaultValue,
   });
+
+  useEffect(() => {
+    setEditorDescription(tree.description || "");
+    setEditorCareInstructions(tree.careInstructions || "");
+
+    const newCategoriesSelected = tree.categories
+      ? tree.categories.map((category: any) => ({
+          value: category._id,
+          label: category.name,
+        }))
+      : [];
+  }, [tree]);
+
+  console.log("value", methods.getValues());
 
   const { fields, append, remove } = useFieldArray({
     control: methods.control,
@@ -134,50 +185,80 @@ const AddNewProduct = () => {
   };
 
   const handleChange: UploadProps["onChange"] = ({ fileList: newFileList }) => {
-    const validFiles = newFileList.filter((file) =>
-      ["image/jpeg", "image/png"].includes(file.type)
-    );
+    let validFiles = newFileList.filter((file: any) => {
+      if (file.originFileObj) {
+        return ["image/jpeg", "image/png"].includes(file.type);
+      } else {
+        return true;
+      }
+    });
+
+    validFiles = validFiles.map(({ error, response, ...rest }) => {
+      return { ...rest };
+    });
 
     if (validFiles.length < newFileList.length) {
       message.error("Only JPG and PNG images are allowed.");
     }
 
+    const imageUrls = validFiles.map((file: UploadFile<any>) => file.url || "");
+
     setImageFiles(validFiles);
-    methods.setValue("imageUrl", validFiles);
+    methods.setValue("imageUrl", imageUrls);
     methods.trigger("imageUrl");
   };
 
-  const handleChangeCategory = (value: string[]) => {
-    console.log(`selected ${value}`);
-  };
-
-  const onSubmit: SubmitHandler<typeof methods.getValues> = async (data) => {
-    if (imageFiles.length === 0) {
-      message.error("At least one image is required.");
-      return;
-    }
-
-    let imageUrl = [];
-    const imageData = new FormData();
-    data.imageUrl.forEach(async (image) => {
-      imageData.append("files", image.originFileObj);
-    });
-    const uploadPromise = await uploadImages(imageData);
-    if (uploadPromise) {
-      imageUrl = uploadPromise.images;
-    }
-
-    data = { ...data, imageUrl };
-
-    const response = await createTree(data);
-
-    if (response && response.success) {
-      if (typeof window !== "undefined") {
-        router.push("/products");
+  const onSubmit: SubmitHandler<ITree> = async (data) => {
+    try {
+      if (imageFiles.length === 0) {
+        message.error("At least one image is required.");
+        return;
       }
-      toast.success("Add service successfully");
-    } else {
-      toast.error("Failed to add service");
+
+      console.log("image", imageFiles);
+      console.log("data", data);
+
+      const imageUpdated: string[] = [];
+      const imageOrigin: string[] = [];
+      await Promise.all(
+        imageFiles.map(async (image: any) => {
+          if (image.originFileObj) {
+            const imgData = new FormData();
+            imgData.append("files", image.originFileObj);
+            const response = await uploadImages(imgData);
+            imageOrigin.push(response.images[0]);
+          } else {
+            imageUpdated.push(removeBaseUrlImage(image.url));
+          }
+        })
+      );
+
+      data.imageUrl = imageOrigin.concat(imageUpdated);
+
+      if (type === "create") {
+        const response = await createTree(data);
+
+        if (response && response.success) {
+          onClose();
+          onSuccess();
+          toast.success("Add service successfully");
+        } else {
+          toast.error("Failed to add service");
+        }
+      } else {
+        const response = await updateTree(tree._id, data);
+
+        if (response && response.success) {
+          onClose();
+          onSuccess();
+          toast.success("Edit service successfully");
+        } else {
+          toast.error("Failed to edit service");
+        }
+      }
+    } catch (error) {
+      console.error("Submit Error:", error);
+      toast.error("An error occurred during submission.");
     }
   };
 
@@ -190,7 +271,6 @@ const AddNewProduct = () => {
 
   const getAllCategories = async () => {
     const response = await getCategories();
-    console.log(response);
     if (response.success) {
       let idList: SelectProps["options"] = [];
       response.treesCategory.forEach((category: ICategory) => {
@@ -198,12 +278,29 @@ const AddNewProduct = () => {
       });
       setCategoriesId(idList);
     }
-    console.log(categoriesId);
   };
 
   useEffect(() => {
     getAllCategories();
   }, []);
+
+  useEffect(() => {
+    methods.reset(memoizedDefaultValue);
+  }, [memoizedDefaultValue, methods]);
+
+  useEffect(() => {
+    setImageFiles(
+      tree.imageUrl
+        ? tree.imageUrl.map((url, index) => {
+            return {
+              uid: index,
+              url: getFullImageUrl(url),
+              name: url.split("/").pop(),
+            };
+          })
+        : []
+    );
+  }, [tree]);
 
   return (
     <section className="relative pb-20">
@@ -379,6 +476,7 @@ const AddNewProduct = () => {
                     placeholder="Please select categories"
                     onChange={(value) => field.onChange(value)}
                     options={categoriesId}
+                    value={field.value}
                   />
                 )}
               />
@@ -434,4 +532,4 @@ const AddNewProduct = () => {
   );
 };
 
-export default AddNewProduct;
+export default TreeForm;
