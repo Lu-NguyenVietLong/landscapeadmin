@@ -24,13 +24,19 @@ import {
   message,
 } from "antd";
 import Button from "@/components/primitive/Button";
-import BundledEditor from "@/components/primitive/BundledEditor";
 import { getCategories } from "@/packages/services/category";
 import Textarea from "@/components/primitive/Textarea";
 import { uploadImages } from "@/packages/services/uploadImages";
 import { createTree, updateTree } from "@/packages/services/product";
 import { toast } from "react-toastify";
 import { getFullImageUrl, removeBaseUrlImage } from "@/utils/helpers";
+import dynamic from "next/dynamic";
+const BundledEditor = dynamic(
+  () => import("@/components/primitive/BundledEditor"),
+  {
+    ssr: false,
+  }
+);
 
 interface ITreeFormProp {
   type: "create" | "edit";
@@ -119,6 +125,7 @@ const TreeForm = ({ type, onClose, tree, onSuccess }: ITreeFormProp) => {
     tree.careInstructions
   );
   const [categoriesId, setCategoriesId] = useState<SelectProps["options"]>([]);
+  const [isClient, setIsClient] = useState(false);
 
   const memoizedDefaultValue = useMemo(
     () => ({
@@ -161,15 +168,13 @@ const TreeForm = ({ type, onClose, tree, onSuccess }: ITreeFormProp) => {
     setEditorDescription(tree.description || "");
     setEditorCareInstructions(tree.careInstructions || "");
 
-    const newCategoriesSelected = tree.categories
-      ? tree.categories.map((category: any) => ({
-          value: category._id,
-          label: category.name,
-        }))
-      : [];
+    // const newCategoriesSelected = tree.categories
+    //   ? tree.categories.map((category: any) => ({
+    //       value: category._id,
+    //       label: category.name,
+    //     }))
+    //   : [];
   }, [tree]);
-
-  console.log("value", methods.getValues());
 
   const { fields, append, remove } = useFieldArray({
     control: methods.control,
@@ -215,9 +220,6 @@ const TreeForm = ({ type, onClose, tree, onSuccess }: ITreeFormProp) => {
         return;
       }
 
-      console.log("image", imageFiles);
-      console.log("data", data);
-
       const imageUpdated: string[] = [];
       const imageOrigin: string[] = [];
       await Promise.all(
@@ -261,6 +263,10 @@ const TreeForm = ({ type, onClose, tree, onSuccess }: ITreeFormProp) => {
       toast.error("An error occurred during submission.");
     }
   };
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const uploadButton = (
     <button style={{ border: 0, background: "none" }} type="button">
@@ -308,7 +314,7 @@ const TreeForm = ({ type, onClose, tree, onSuccess }: ITreeFormProp) => {
         <h2 className="text-xl font-medium mt-5">Thêm cây mới</h2>
         <FormProvider {...methods}>
           <form
-            onSubmit={methods.handleSubmit(onSubmit)}
+            // onSubmit={methods.handleSubmit(onSubmit)}
             className="space-y-4 mt-4"
           >
             <div>
@@ -324,8 +330,8 @@ const TreeForm = ({ type, onClose, tree, onSuccess }: ITreeFormProp) => {
               <Upload
                 listType="picture-card"
                 fileList={imageFiles}
-                onPreview={handlePreview}
-                onChange={handleChange}
+                // onPreview={handlePreview}
+                // onChange={handleChange}
               >
                 {uploadButton}
               </Upload>
@@ -408,14 +414,16 @@ const TreeForm = ({ type, onClose, tree, onSuccess }: ITreeFormProp) => {
             <div className="mt-4">
               <label className="block mb-1">Description:</label>
               <div className="px-16">
-                <BundledEditor
-                  value={editorDescription}
-                  name="description"
-                  onEditorChange={(newValue: any) => {
-                    setEditorDescription(newValue);
-                    methods.setValue("description", newValue);
-                  }}
-                />
+                {isClient && (
+                  <BundledEditor
+                    value={editorDescription}
+                    name="description"
+                    onEditorChange={(newValue: any) => {
+                      setEditorDescription(newValue);
+                      methods.setValue("description", newValue);
+                    }}
+                  />
+                )}
                 {methods.formState.errors.description && (
                   <div className="text-red-500">
                     {methods.formState.errors.description.message}
@@ -426,14 +434,16 @@ const TreeForm = ({ type, onClose, tree, onSuccess }: ITreeFormProp) => {
             <div className="mt-4">
               <label className="block mb-1">Care Instuctions:</label>
               <div className="px-16">
-                <BundledEditor
-                  value={editorCareInstructions}
-                  name="careInstructions"
-                  onEditorChange={(newValue: any) => {
-                    setEditorCareInstructions(newValue);
-                    methods.setValue("careInstructions", newValue);
-                  }}
-                />
+                {isClient && (
+                  <BundledEditor
+                    value={editorCareInstructions}
+                    name="careInstructions"
+                    onEditorChange={(newValue: any) => {
+                      setEditorCareInstructions(newValue);
+                      methods.setValue("careInstructions", newValue);
+                    }}
+                  />
+                )}
                 {methods.formState.errors.careInstructions && (
                   <div className="text-red-500">
                     {methods.formState.errors.careInstructions.message}
