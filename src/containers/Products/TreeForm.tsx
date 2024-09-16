@@ -314,7 +314,7 @@ const TreeForm = ({ type, onClose, tree, onSuccess }: ITreeFormProp) => {
         <h2 className="text-xl font-medium mt-5">Thêm cây mới</h2>
         <FormProvider {...methods}>
           <form
-            // onSubmit={methods.handleSubmit(onSubmit)}
+            onSubmit={methods.handleSubmit(onSubmit)}
             className="space-y-4 mt-4"
           >
             <div>
@@ -330,8 +330,8 @@ const TreeForm = ({ type, onClose, tree, onSuccess }: ITreeFormProp) => {
               <Upload
                 listType="picture-card"
                 fileList={imageFiles}
-                // onPreview={handlePreview}
-                // onChange={handleChange}
+                onPreview={handlePreview}
+                onChange={handleChange}
               >
                 {uploadButton}
               </Upload>
