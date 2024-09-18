@@ -1,5 +1,5 @@
 interface ITree {
-    _id: string;
+    _id?: string;
     name: string; // Tên cây
     scientificName?: string; // Tên khoa học của cây
     sizes: Array<{
