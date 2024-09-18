@@ -51,7 +51,6 @@ interface ICategoryOption {
 }
 
 const treeSchema = z.object({
-  _id: z.string().optional(),
   name: z.string().min(1, "Tree name is required"),
   scientificName: z.string().optional(),
   // imageUrl: z.array(z.any()).min(1, "At least one image is required"),
@@ -129,7 +128,6 @@ const TreeForm = ({ type, onClose, tree, onSuccess }: ITreeFormProp) => {
 
   const memoizedDefaultValue = useMemo(
     () => ({
-      _id: tree._id,
       name: tree.name,
       scientificName: tree.scientificName,
       imageUrl: tree.imageUrl,
