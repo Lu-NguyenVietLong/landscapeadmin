@@ -43,12 +43,14 @@ const Products = () => {
   };
 
   const handleDeleteTree = async (tree: ITree) => {
-    const response = await deleteTree(tree._id);
-    if (response && response.success) {
-      toast.success("Delete service successfully");
-      await handleGetTrees();
-    } else {
-      toast.error("Failed to delete service");
+    if (tree._id) {
+      const response = await deleteTree(tree._id);
+      if (response && response.success) {
+        toast.success("Delete service successfully");
+        await handleGetTrees();
+      } else {
+        toast.error("Failed to delete service");
+      }
     }
   };
 
