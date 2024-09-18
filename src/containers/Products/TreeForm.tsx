@@ -246,14 +246,16 @@ const TreeForm = ({ type, onClose, tree, onSuccess }: ITreeFormProp) => {
           toast.error("Failed to add service");
         }
       } else {
-        const response = await updateTree(tree._id, data);
+        if (tree._id) {
+          const response = await updateTree(tree._id, data);
 
-        if (response && response.success) {
-          onClose();
-          onSuccess();
-          toast.success("Edit service successfully");
-        } else {
-          toast.error("Failed to edit service");
+          if (response && response.success) {
+            onClose();
+            onSuccess();
+            toast.success("Edit service successfully");
+          } else {
+            toast.error("Failed to edit service");
+          }
         }
       }
     } catch (error) {
