@@ -2,6 +2,7 @@ import { cva } from "class-variance-authority";
 import Link from "next/link";
 import React, { ReactNode } from "react";
 import { cn } from "@/utils/helpers";
+import { Spin } from "antd";
 
 export const buttonStyles = cva(
   "flex-center gap-2 rounded-lg h-max w-max transition-all duration-300 whitespace-nowrap border",
@@ -35,6 +36,7 @@ const Button = ({
   variant = "primary",
   type = "button",
   size = "normal",
+  loading = false,
   ...props
 }: IButtonProps) => {
   if (href) {
@@ -54,6 +56,7 @@ const Button = ({
       className={cn(buttonStyles({ type: variant, size, className }))}
       {...props}
     >
+      {loading && <Spin />}
       {children}
     </button>
   );
