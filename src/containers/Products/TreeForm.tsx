@@ -196,6 +196,7 @@ const TreeForm = ({ type, onClose, tree, onSuccess }: ITreeFormProp) => {
           "image/jpg",
           "image/heic",
           "image/heif",
+          "image/webp",
         ].includes(file?.type || "");
       } else {
         return true;
