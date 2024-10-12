@@ -1,8 +1,5 @@
 "use client";
 import Header from "@/components/compound/Header";
-import SideBar from "@/components/compound/SideBar";
-import Container from "@/components/primitive/Container";
-import Login from "@/containers/Login";
 import useAuth from "@/packages/hook/useAuth";
 import { cn } from "@/utils/helpers";
 import { ReactNode } from "react";
