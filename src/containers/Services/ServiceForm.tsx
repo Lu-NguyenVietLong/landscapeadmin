@@ -42,6 +42,7 @@ const getBase64 = (file: FileType): Promise<string> =>
   });
 
 const ServiceForm = ({ service, onClose }: IServiceProp) => {
+  const [loading, setLoading] = useState(false);
   const [title, setTitle] = useState(service?.title || "");
   const [message, setMessage] = useState(service?.message || "");
   const [images, setImages] = useState<any>([]);
@@ -134,6 +135,8 @@ const ServiceForm = ({ service, onClose }: IServiceProp) => {
   // HANDLE SUBMIT FORM
   const handleSubmit = async () => {
     try {
+      setLoading(true);
+
       // Upload project images and collect promises
       const uploadImageProjectPromises = projectFieldList.map(
         async (project: any) => {
@@ -223,7 +226,10 @@ const ServiceForm = ({ service, onClose }: IServiceProp) => {
           throw new Error("Failed to update service");
         }
       }
+
+      setLoading(false);
     } catch (error) {
+      setLoading(true);
       toast.error("Failed to update service");
     }
   };
@@ -385,7 +391,9 @@ const ServiceForm = ({ service, onClose }: IServiceProp) => {
         </div>
       </div>
       <div className="flex justify-center mt-5">
-        <Button onClick={handleSubmit}>Create</Button>
+        <Button loading={loading} onClick={handleSubmit}>
+          Create
+        </Button>
       </div>
     </form>
   );

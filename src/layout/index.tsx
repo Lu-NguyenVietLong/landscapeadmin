@@ -17,10 +17,10 @@ const Layout = ({ children }: ILayoutProps) => {
   return (
     <>
       <div className="grid grid-cols-12">
-        <div className="col-span-2">{user && <SideBar />}</div>
+        <div className="col-span-2 hidden lg:block">{user && <SideBar />}</div>
         <main
           className={cn(
-            "bg-background px-6 col-span-10 overflow-x-hidden h-screen",
+            "bg-background px-6 lg:col-span-10 overflow-x-hidden h-screen col-span-12",
             {
               "col-span-12": !user,
             }

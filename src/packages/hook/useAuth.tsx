@@ -60,6 +60,8 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
           JSON.stringify({ StoredToken: data.token, StoredUser: data.user })
         );
         router.push("/");
+      } else {
+        return data;
       }
     } catch (error) {
       setError(error);

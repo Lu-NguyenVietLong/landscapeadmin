@@ -100,7 +100,7 @@ const Services = () => {
           <Table loading={loading} dataSource={services} columns={columns} />
         </div>
       </div>
-      <Modal width={800} open={isOpenAdd} onCancel={HandleClose}>
+      <Modal width="100%" open={isOpenAdd} onCancel={HandleClose}>
         <h1 className="text-xl font-semibold">Add service</h1>
         <AddService
           onClose={HandleClose}
@@ -108,7 +108,7 @@ const Services = () => {
         />
       </Modal>
       <Modal
-        width={800}
+        width="100%"
         open={isOpenEdit}
         onCancel={() => setIsOpenEdit(!isOpenEdit)}
         footer={null}

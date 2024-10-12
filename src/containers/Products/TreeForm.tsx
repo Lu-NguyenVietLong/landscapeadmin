@@ -13,6 +13,7 @@ import { z } from "zod";
 import { PlusOutlined, MinusCircleOutlined } from "@ant-design/icons";
 import Input from "@/components/primitive/Input";
 import {
+  Button,
   Checkbox,
   GetProp,
   Image,
@@ -23,7 +24,6 @@ import {
   UploadProps,
   message,
 } from "antd";
-import Button from "@/components/primitive/Button";
 import { getCategories } from "@/packages/services/category";
 import Textarea from "@/components/primitive/Textarea";
 import { uploadImages } from "@/packages/services/uploadImages";
@@ -117,6 +117,7 @@ const TreeForm = ({ type, onClose, tree, onSuccess }: ITreeFormProp) => {
         })
       : []
   );
+  const [loading, setLoading] = useState(false);
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
   const [editorDescription, setEditorDescription] = useState(tree.description);
@@ -220,6 +221,7 @@ const TreeForm = ({ type, onClose, tree, onSuccess }: ITreeFormProp) => {
 
   const onSubmit: SubmitHandler<ITree> = async (data) => {
     try {
+      setLoading(true);
       if (imageFiles.length === 0) {
         message.error("At least one image is required.");
         return;
@@ -265,7 +267,9 @@ const TreeForm = ({ type, onClose, tree, onSuccess }: ITreeFormProp) => {
           }
         }
       }
+      setLoading(false);
     } catch (error) {
+      setLoading(false);
       console.error("Submit Error:", error);
       toast.error("An error occurred during submission.");
     }
@@ -317,7 +321,7 @@ const TreeForm = ({ type, onClose, tree, onSuccess }: ITreeFormProp) => {
 
   return (
     <section className="relative pb-20">
-      <div className="bg-white size-full shadow-box rounded-lg px-8 py-4">
+      <div className="bg-white size-full shadow-box rounded-lg lg:px-8 px-2 py-4">
         <h2 className="text-xl font-medium mt-5">Thêm cây mới</h2>
         <FormProvider {...methods}>
           <form
@@ -399,7 +403,6 @@ const TreeForm = ({ type, onClose, tree, onSuccess }: ITreeFormProp) => {
                 </div>
               ))}
               <Button
-                type="button"
                 className="ml-[200px]"
                 onClick={() => append({ size: "", price: 0 })}
               >
@@ -420,7 +423,7 @@ const TreeForm = ({ type, onClose, tree, onSuccess }: ITreeFormProp) => {
             </div>
             <div className="mt-4">
               <label className="block mb-1">Description:</label>
-              <div className="px-16">
+              <div>
                 {isClient && (
                   <BundledEditor
                     value={editorDescription}
@@ -440,7 +443,7 @@ const TreeForm = ({ type, onClose, tree, onSuccess }: ITreeFormProp) => {
             </div>
             <div className="mt-4">
               <label className="block mb-1">Care Instuctions:</label>
-              <div className="px-16">
+              <div>
                 {isClient && (
                   <BundledEditor
                     value={editorCareInstructions}
@@ -539,7 +542,7 @@ const TreeForm = ({ type, onClose, tree, onSuccess }: ITreeFormProp) => {
               <label className="block mb-1">Pot Size:</label>
               <Input placeholder="Pot Size" name="additionalInfo.potSize" />
             </div>
-            <Button type="submit">
+            <Button loading={loading} htmlType="submit">
               <PlusOutlined /> Thêm cây mới
             </Button>
           </form>

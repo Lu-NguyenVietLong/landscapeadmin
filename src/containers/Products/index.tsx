@@ -106,7 +106,7 @@ const Products = () => {
         </div>
       </div>
       <Modal
-        width={800}
+        width="100%"
         open={openForm}
         onCancel={() => handleCloseForm()}
         footer={null}

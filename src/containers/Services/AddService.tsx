@@ -1,10 +1,9 @@
 "use client";
 
 // import BundledEditor from "@/components/primitive/BundledEditor";
-import Button from "@/components/primitive/Button";
 import { createService } from "@/packages/services/servicesApi";
 import { uploadImages } from "@/packages/services/uploadImages";
-import { Input } from "antd";
+import { Button, Input } from "antd";
 import { map } from "lodash";
 import { Plus, PlusCircle, Trash, Trash2 } from "lucide-react";
 import { toast } from "react-toastify";
@@ -29,6 +28,7 @@ interface IProjectField {
 }
 
 const AddService = ({ onClose, addService }: IAddService) => {
+  const [loading, setLoading] = useState(false);
   const [title, setTitle] = useState("");
   const [message, setMessage] = useState("");
   const [content, setContent] = useState("");
@@ -77,6 +77,7 @@ const AddService = ({ onClose, addService }: IAddService) => {
   };
 
   const handleSubmit = async () => {
+    setLoading(true);
     const data = new FormData();
     const uploadPromises: any = [];
 
@@ -116,7 +117,9 @@ const AddService = ({ onClose, addService }: IAddService) => {
         toast.success("New service added successfully");
         onClose();
       }
+      setLoading(false);
     } catch (error) {
+      setLoading(true);
       toast.error("Failed to add new service");
     }
   };
@@ -205,7 +208,7 @@ const AddService = ({ onClose, addService }: IAddService) => {
         </div>
       </div>
       <div className="flex justify-center mt-5">
-        <Button onClick={handleSubmit}>Create</Button>
+        <Button loading={loading} onClick={handleSubmit}>Create</Button>
       </div>
     </form>
   );
