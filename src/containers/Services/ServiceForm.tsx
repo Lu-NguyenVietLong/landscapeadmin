@@ -107,6 +107,10 @@ const ServiceForm = ({ service, onClose }: IServiceProp) => {
       }
 
       setProjectField(updatedProjectField);
+
+      let projectList = projectFieldList;
+      projectList[index][name] = inputValue;
+      setProjectFieldList(projectList);
     }
   };
 
