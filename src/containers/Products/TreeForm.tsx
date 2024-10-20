@@ -523,7 +523,7 @@ const TreeForm = ({ type, onClose, tree, onSuccess }: ITreeFormProp) => {
             </div>
             <div className="mt-4">
               <label className="block mb-1">Tips:</label>
-              <Textarea placeholder="Tips" name="additionalInfo.tips" />
+              <Textarea placeholder="Tips" name="basicInfo.tips" />
             </div>
 
             <div className="mt-8">
