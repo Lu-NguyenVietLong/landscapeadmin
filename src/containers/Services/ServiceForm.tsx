@@ -98,7 +98,7 @@ const ServiceForm = ({ service, onClose }: IServiceProp) => {
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
     if (isArray(projectField) && projectField.length !== 0) {
-      const updatedProjectField: any = [...projectField];
+      const updatedProjectField: any = [...projectFieldList];
       const { name, files, value: inputValue } = e.target;
       if (name === "name") {
         updatedProjectField[index][name] = inputValue;
