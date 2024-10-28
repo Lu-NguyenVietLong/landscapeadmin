@@ -190,16 +190,22 @@ const TreeForm = ({ type, onClose, tree, onSuccess }: ITreeFormProp) => {
 
   const handleChange: UploadProps["onChange"] = ({ fileList: newFileList }) => {
     let validFiles = newFileList.filter((file: any) => {
+      const type = file?.type || "";
+      const name = file?.name?.toLowerCase() || "";
+
       if (file.originFileObj) {
-        console.log(file.type);
-        return [
-          "image/jpeg",
-          "image/png",
-          "image/jpg",
-          "image/heic",
-          "image/heif",
-          "image/webp",
-        ].includes(file?.type || "");
+        return (
+          [
+            "image/jpeg",
+            "image/png",
+            "image/jpg",
+            "image/heic",
+            "image.heif",
+            "image/webp",
+          ].includes(type) ||
+          name.endsWith(".heic") ||
+          name.endsWith(".heif")
+        );
       } else {
         return true;
       }
