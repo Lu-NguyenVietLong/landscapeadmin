@@ -191,6 +191,7 @@ const TreeForm = ({ type, onClose, tree, onSuccess }: ITreeFormProp) => {
   const handleChange: UploadProps["onChange"] = ({ fileList: newFileList }) => {
     let validFiles = newFileList.filter((file: any) => {
       if (file.originFileObj) {
+        console.log(file.type);
         return [
           "image/jpeg",
           "image/png",
