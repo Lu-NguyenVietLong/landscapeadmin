@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import { PlusOutlined } from "@ant-design/icons";
-import { Input, Tag, Tooltip } from "antd";
+import { Input, InputRef, Tag, Tooltip } from "antd";
 
 interface TagInputProps {
   initialTags?: string[];
@@ -15,8 +15,8 @@ const TagInput: React.FC<TagInputProps> = ({ initialTags = [], onChange }) => {
   const [inputValue, setInputValue] = useState("");
   const [editInputIndex, setEditInputIndex] = useState(-1);
   const [editInputValue, setEditInputValue] = useState("");
-  const inputRef = useRef<HTMLInputElement>(null);
-  const editInputRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<InputRef>(null);
+  const editInputRef = useRef<InputRef>(null);
 
   useEffect(() => {
     if (inputVisible) inputRef.current?.focus();
