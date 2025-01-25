@@ -31,6 +31,7 @@ import { createTree, updateTree } from "@/packages/services/product";
 import { toast } from "react-toastify";
 import { getFullImageUrl, removeBaseUrlImage } from "@/utils/helpers";
 import dynamic from "next/dynamic";
+import TagInput from "@/components/primitive/TagInput";
 const BundledEditor = dynamic(
   () => import("@/components/primitive/BundledEditor"),
   {
@@ -71,6 +72,11 @@ const treeSchema = z.object({
     .default(0),
   sold: z.number().min(0, "Sold must be a non-negative number").default(0),
   description: z.string().min(1, "Description is required"),
+  shortDescription: z
+    .string()
+    .min(1, "Short description is required")
+    .max(150, "Short description must be less than 150 characters"),
+  keywords: z.array(z.string()).min(1, "Keywords is required"),
   careInstructions: z.string(),
   isAvailable: z.boolean(),
   categories: z.array(z.string()).min(1, "Category is required"),
@@ -154,6 +160,8 @@ const TreeForm = ({ type, onClose, tree, onSuccess }: ITreeFormProp) => {
         careLevel: tree.additionalInfo?.careLevel,
         potSize: tree.additionalInfo?.potSize,
       },
+      shortDescription: tree.shortDescription,
+      keywords: tree.keywords,
     }),
     [tree]
   );
@@ -370,6 +378,29 @@ const TreeForm = ({ type, onClose, tree, onSuccess }: ITreeFormProp) => {
                   }}
                   src={previewImage}
                 />
+              )}
+            </div>
+            <div className="mt-8">
+              <label className="block mb-1">Short Description:</label>
+              <Textarea
+                maxLength={150}
+                placeholder="Cây...."
+                name="shortDescription"
+              />
+            </div>
+            <div className="mt-8">
+              <label className="block mb-1">Keywords:</label>
+              <TagInput
+                initialTags={methods.getValues("keywords")}
+                onChange={(tags) => {
+                  methods.setValue("keywords", tags); // Cập nhật giá trị vào form
+                  methods.trigger("keywords"); // Gọi validate nếu cần
+                }}
+              />
+              {methods.formState.errors.keywords && (
+                <div className="text-red-500">
+                  {methods.formState.errors.keywords.message}
+                </div>
               )}
             </div>
             <div className="mt-4">

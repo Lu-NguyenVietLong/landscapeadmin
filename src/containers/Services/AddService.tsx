@@ -9,6 +9,8 @@ import { Plus, PlusCircle, Trash, Trash2 } from "lucide-react";
 import { toast } from "react-toastify";
 import React, { useRef, useState } from "react";
 import dynamic from "next/dynamic";
+import Textarea from "@/components/primitive/Textarea";
+import TagInput from "@/components/primitive/TagInput";
 
 const BundledEditor = dynamic(
   () => import("@/components/primitive/BundledEditor"),
@@ -41,6 +43,8 @@ const AddService = ({ onClose, addService }: IAddService) => {
       files: [],
     },
   ]);
+  const [shortDescription, setShortDescription] = useState("");
+  const [keyWords, setKeywords] = useState<string[]>([]);
 
   const editorRef = useRef(null);
 
@@ -109,6 +113,8 @@ const AddService = ({ onClose, addService }: IAddService) => {
       data.set("message", message);
       data.set("content", contentValue);
       data.set("policy", policyValue);
+      data.set("shortDescription", shortDescription);
+      data.set("keywords", keyWords.join(","));
 
       console.log("data projects", data.getAll("projects"));
       const res = await createService(data);
@@ -142,6 +148,22 @@ const AddService = ({ onClose, addService }: IAddService) => {
           multiple
           type="file"
           onChange={handleFileSelected}
+        />
+      </div>
+      <div className="mb-3">
+        <label className="text-second">Short Description:</label>
+        <textarea
+          placeholder="Short Description..."
+          className="bg-slate-200 border-none outline-none py-3 w-full px-4 mt-1"
+          onChange={(e) => setShortDescription(e.target.value)}
+          name="shortDescription"
+        />
+      </div>
+      <div className="mb-3">
+        <label className="text-second">Keywords:</label>
+        <TagInput
+          initialTags={keyWords}
+          onChange={(tags) => setKeywords(tags)}
         />
       </div>
       <div className="mb-3">
@@ -208,7 +230,9 @@ const AddService = ({ onClose, addService }: IAddService) => {
         </div>
       </div>
       <div className="flex justify-center mt-5">
-        <Button loading={loading} onClick={handleSubmit}>Create</Button>
+        <Button loading={loading} onClick={handleSubmit}>
+          Create
+        </Button>
       </div>
     </form>
   );

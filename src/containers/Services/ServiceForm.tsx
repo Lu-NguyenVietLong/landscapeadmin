@@ -13,6 +13,7 @@ import { Image, Upload } from "antd";
 import type { GetProp, UploadFile, UploadProps } from "antd";
 import { getFullImageUrl, removeBaseUrlImage } from "@/utils/helpers";
 import { UploadChangeParam } from "antd/es/upload";
+import TagInput from "@/components/primitive/TagInput";
 
 const BundledEditor = dynamic(
   () => import("@/components/primitive/BundledEditor"),
@@ -55,6 +56,10 @@ const ServiceForm = ({ service, onClose }: IServiceProp) => {
   const [projectFieldList, setProjectFieldList] = useState<any>(
     service?.projects || []
   );
+  const [shortDescription, setShortDescription] = useState(
+    service.shortDescription || ""
+  );
+  const [keywords, setKeywords] = useState<string[]>(service.keywords || []);
 
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
@@ -210,6 +215,14 @@ const ServiceForm = ({ service, onClose }: IServiceProp) => {
         data.set("policy", policy);
       }
 
+      if (shortDescription) {
+        data.set("shortDescription", shortDescription);
+      }
+
+      if (keywords.length > 0) {
+        data.set("keywords", keywords.join(","));
+      }
+
       // Add updated project fields to the form data
       updatedProjects.forEach((project: any) => {
         data.append(
@@ -320,6 +333,23 @@ const ServiceForm = ({ service, onClose }: IServiceProp) => {
           placeholder="Message..."
           className="bg-slate-200 border-none outline-none py-3 w-full px-4 mt-1"
           onChange={(e) => setMessage(e.target.value)}
+        />
+      </div>
+      <div className="mb-3">
+        <label className="text-second">Short Description:</label>
+        <textarea
+          placeholder="Short Description..."
+          className="bg-slate-200 border-none outline-none py-3 w-full px-4 mt-1"
+          onChange={(e) => setShortDescription(e.target.value)}
+          name="shortDescription"
+          value={shortDescription}
+        />
+      </div>
+      <div className="mb-3">
+        <label className="text-second">Keywords:</label>
+        <TagInput
+          initialTags={keywords}
+          onChange={(tags) => setKeywords(tags)}
         />
       </div>
       <div className="mb-3">

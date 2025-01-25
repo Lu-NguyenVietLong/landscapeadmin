@@ -21,6 +21,8 @@ interface ITree {
       environment?: string; // Môi trường
       tips?: string; // Mẹo hay
     };
+    shortDescription: string;
+    keywords?: string[]; // Mảng chứa các từ khóa
     additionalInfo?: {
       height?: string; // Chiều cao cây
       toxicity?: string; // Độc tố (nếu có)

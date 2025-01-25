@@ -5,6 +5,8 @@ interface IService {
     message: string;
     content: string,
     policy?: string,
-    projects?: {name: string, images: any}[]
+    projects?: {name: string, images: any}[],
+    shortDescription: string,
+    keywords: string[]
 }
 

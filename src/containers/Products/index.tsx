@@ -142,6 +142,10 @@ const Products = () => {
                 : "",
               tips: dataEdit?.basicInfo?.tips ? dataEdit.basicInfo.tips : "",
             },
+            shortDescription: dataEdit?.shortDescription
+              ? dataEdit.shortDescription
+              : "",
+            keywords: dataEdit?.keywords ? dataEdit.keywords : [],
             additionalInfo: {
               height: dataEdit?.additionalInfo?.height
                 ? dataEdit.additionalInfo.height
