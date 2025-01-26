@@ -75,7 +75,7 @@ const treeSchema = z.object({
   shortDescription: z
     .string()
     .min(1, "Short description is required")
-    .max(160, "Short description must be less than 150 characters"),
+    .max(160, "Short description must be less than 160 characters"),
   keywords: z.array(z.string()).min(1, "Keywords is required"),
   careInstructions: z.string(),
   isAvailable: z.boolean(),
