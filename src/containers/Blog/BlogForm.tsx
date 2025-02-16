@@ -11,8 +11,9 @@ import {
 } from "antd";
 import moment from "moment";
 import { IBlog, IBlogCategory } from "@/packages/interfaces/blog.interface";
-import { removeBaseUrlImage } from "@/utils/helpers";
+import { getFullImageUrl, removeBaseUrlImage } from "@/utils/helpers";
 import dynamic from "next/dynamic";
+import ImageUpload from "@/components/primitive/ImageUpload";
 const BundledEditor = dynamic(
   () => import("@/components/primitive/BundledEditor"),
   {
@@ -43,15 +44,17 @@ const BlogForm: React.FC<BlogFormProps> = ({
     if (initialValues?.content) {
       setEditorContent(initialValues.content);
     }
+
+    if (initialValues?.featuredImage) {
+      initialValues.featuredImage = getFullImageUrl(
+        initialValues.featuredImage
+      );
+    }
   }, [initialValues]);
 
   console.log("initialValues");
 
   const handleFinish = (values: any) => {
-    // Nếu có publicationDate (moment object), chuyển về Date
-    if (values.featuredImage) {
-      values.featuredImage = removeBaseUrlImage(values.featuredImage);
-    }
     if (values.publicationDate) {
       values.publicationDate = values.publicationDate.toDate();
     }
@@ -96,8 +99,9 @@ const BlogForm: React.FC<BlogFormProps> = ({
           onEditorChange={(content: string) => setEditorContent(content)}
         />
       </Form.Item>
-      <Form.Item label="Featured Image URL" name="featuredImage">
-        <Input placeholder="Enter featured image URL (optional)" />
+      <Form.Item label="Featured Image" name="featuredImage">
+        {/* Sử dụng component ImageUpload */}
+        <ImageUpload />
       </Form.Item>
       <Form.Item label="Categories" name="categories">
         {/* Ví dụ sử dụng Select mode multiple; bạn có thể thay thế bằng dữ liệu từ API */}
