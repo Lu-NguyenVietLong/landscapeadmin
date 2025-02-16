@@ -8,7 +8,8 @@ import EditCategoryModal from "./EditCategoryModal";
 import {
   deleteBlogCategory,
   getBlogCategories,
-} from "@/packages/services/blog";
+} from "@/packages/services/blogCategory";
+import { IBlogCategory } from "@/packages/interfaces/blog.interface";
 
 const BlogCategoryPage: React.FC = () => {
   const [categories, setCategories] = useState<IBlogCategory[]>([]);

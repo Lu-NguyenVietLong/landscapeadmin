@@ -3,7 +3,7 @@
 import React from "react";
 import { Modal, message } from "antd";
 import BlogCategoryForm from "./BlogCategoryForm";
-import { createBlogCategory } from "@/packages/services/blog";
+import { createBlogCategory } from "@/packages/services/blogCategory";
 
 interface CreateCategoryModalProps {
   visible: boolean;
@@ -39,6 +39,8 @@ const CreateCategoryModal: React.FC<CreateCategoryModalProps> = ({
       onCancel={onClose}
       footer={null}
       destroyOnClose
+      maskClosable={false}
+      width="100%"
     >
       <BlogCategoryForm onFinish={handleFinish} submitText="Tạo danh mục" />
     </Modal>

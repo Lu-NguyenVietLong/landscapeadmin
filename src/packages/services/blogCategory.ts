@@ -1,3 +1,4 @@
+import { IBlogCategory } from '@/packages/interfaces/blog.interface';
 import { AxiosPromise, AxiosResponse } from "axios";
 import axios from "./service";
 import Cookies from "js-cookie";
@@ -5,7 +6,8 @@ import Cookies from "js-cookie";
 interface IServiceResponse {
   success: boolean;
   message: string;
-  categories?: IBlogCategory | IBlogCategory[];
+  categories?: IBlogCategory[];
+  category?: IBlogCategory;
   error?: string;
 }
 

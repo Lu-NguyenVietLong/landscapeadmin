@@ -3,7 +3,7 @@
 import React from "react";
 import { Modal, message } from "antd";
 import BlogCategoryForm from "./BlogCategoryForm";
-import { updateBlogCategory } from "@/packages/services/blog";
+import { updateBlogCategory } from "@/packages/services/blogCategory";
 
 interface EditCategoryModalProps {
   visible: boolean;
@@ -44,6 +44,8 @@ const EditCategoryModal: React.FC<EditCategoryModalProps> = ({
       onCancel={onClose}
       footer={null}
       destroyOnClose
+      maskClosable={false}
+      width="100%"
     >
       <BlogCategoryForm
         initialValues={category}

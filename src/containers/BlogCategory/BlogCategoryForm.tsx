@@ -2,6 +2,7 @@
 // src/components/BlogCategoryForm.tsx
 import React from "react";
 import { Form, Input, Button } from "antd";
+import { IBlogCategory } from "@/packages/interfaces/blog.interface";
 
 interface CategoryFormProps {
   initialValues?: Partial<IBlogCategory>;
