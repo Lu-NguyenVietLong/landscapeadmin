@@ -4,6 +4,7 @@ import React from "react";
 import { Modal, message } from "antd";
 import BlogCategoryForm from "./BlogCategoryForm";
 import { updateBlogCategory } from "@/packages/services/blogCategory";
+import { IBlogCategory } from "@/packages/interfaces/blog.interface";
 
 interface EditCategoryModalProps {
   visible: boolean;
