@@ -10,16 +10,15 @@ import {
   InputNumber,
 } from "antd";
 import moment from "moment";
+import { IBlog, IBlogCategory } from "@/packages/interfaces/blog.interface";
+import { removeBaseUrlImage } from "@/utils/helpers";
+import dynamic from "next/dynamic";
 const BundledEditor = dynamic(
   () => import("@/components/primitive/BundledEditor"),
   {
     ssr: false,
   }
 );
-
-import { IBlog, IBlogCategory } from "@/packages/interfaces/blog.interface";
-import { removeBaseUrlImage } from "@/utils/helpers";
-
 const { Option } = Select;
 
 interface BlogFormProps {
