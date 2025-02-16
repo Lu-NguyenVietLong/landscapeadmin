@@ -10,7 +10,13 @@ import {
   InputNumber,
 } from "antd";
 import moment from "moment";
-import BundledEditor from "@/components/primitive/BundledEditor";
+const BundledEditor = dynamic(
+  () => import("@/components/primitive/BundledEditor"),
+  {
+    ssr: false,
+  }
+);
+
 import { IBlog, IBlogCategory } from "@/packages/interfaces/blog.interface";
 import { removeBaseUrlImage } from "@/utils/helpers";
 
