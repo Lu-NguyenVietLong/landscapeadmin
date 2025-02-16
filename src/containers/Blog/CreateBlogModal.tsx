@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { Modal, message } from "antd";
 import { createBlog } from "@/packages/services/blogApi";
-import BlogForm from "./blogForm";
+import BlogForm from "./BlogForm";
 import { IBlogCategory } from "@/packages/interfaces/blog.interface";
 
 interface CreateBlogModalProps {

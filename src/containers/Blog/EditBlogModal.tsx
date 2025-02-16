@@ -1,9 +1,9 @@
 "use client";
 import React, { useState } from "react";
 import { Modal, message } from "antd";
-import BlogForm from "./blogForm";
 import { updateBlog } from "@/packages/services/blogApi";
 import { IBlog, IBlogCategory } from "@/packages/interfaces/blog.interface";
+import BlogForm from "./BlogForm";
 
 interface EditBlogModalProps {
   visible: boolean;
