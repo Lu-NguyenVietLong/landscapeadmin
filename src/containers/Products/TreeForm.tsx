@@ -75,7 +75,7 @@ const treeSchema = z.object({
   shortDescription: z
     .string()
     .min(1, "Short description is required")
-    .max(160, "Short description must be less than 160 characters"),
+    .max(250, "Short description must be less than 160 characters"),
   keywords: z.array(z.string()).min(1, "Keywords is required"),
   careInstructions: z.string(),
   isAvailable: z.boolean(),
@@ -383,7 +383,7 @@ const TreeForm = ({ type, onClose, tree, onSuccess }: ITreeFormProp) => {
             <div className="mt-8">
               <label className="block mb-1">Short Description:</label>
               <Textarea
-                maxLength={160}
+                maxLength={250}
                 placeholder="Cây...."
                 name="shortDescription"
               />
